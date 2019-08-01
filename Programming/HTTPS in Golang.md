@@ -1,4 +1,4 @@
-﻿
+
 Check [this post](https://stackoverflow.com/questions/38822764/how-to-send-a-https-request-with-a-certificate-golang) and [this post](https://www.ibm.com/support/knowledgecenter/en/SSWHYP_4.0.0/com.ibm.apimgmt.cmc.doc/task_apionprem_gernerate_self_signed_openSSL.html) for details.
 
 ## Certificates
@@ -18,7 +18,7 @@ openssl x509 -req -in wjy.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 365
 
 ## Https server
 
-```golang
+```go
 func serve() {
 	http.HandleFunc(config.Pattern, handler)
 	http.ListenAndServeTLS(config.Addr, "wjy.crt", "wjy.key", nil)
@@ -30,7 +30,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 ## Https client
 
-```golang
+```go
 func client() {
     cert, _ := ioutil.ReadFile("ca.crt")
     certPool := x509.NewCertPool()

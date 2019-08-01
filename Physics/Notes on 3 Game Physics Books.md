@@ -1,4 +1,4 @@
-﻿本文是 *Physics for Game Developer**Game Physics Engine Development*，与 *Game Physics 2nd edition* by *David Eberly* 的读书笔记。部分为 *Physics for Game Developer* 的简单笔记，部分为 *Game Physics Engine Development* 的代码 Cyclone 的剖析，最后是 *Game Physics 2nd rly* 的摘录。
+﻿本文是 *Physics for Game Developer* ，*Game Physics Engine Development*，与 *Game Physics 2nd edition* by *David Eberly* 的读书笔记。部分为 *Physics for Game Developer* 的简单笔记，部分为 *Game Physics Engine Development* 的代码 Cyclone 的剖析，最后是 *Game Physics 2nd rly* 的摘录。
 
 # Physics for Game Developer
 

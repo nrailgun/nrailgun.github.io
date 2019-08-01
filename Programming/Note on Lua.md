@@ -1,4 +1,4 @@
-﻿
+
 ## Materials
 
 - *Programming in Lua*, 2nd edition.
