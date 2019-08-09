@@ -6,56 +6,45 @@
     - [x] Lua / C API / 大致设计
     - [x] Rust
 - [x] Tools
-    - [x] GRpc
+    - [x] gRpc
     - [x] MongoDb
     - [x] Redis
     - [x] elk
     - [x] Jenkins
     - [x] nginx
-- [x] Video game developing
-    - [x] game engine architecture
-    - [x] frameworks
+- [x] Video Game Developing
+    - [x] Game Engine Architecture
+    - [x] Frameworks
         - [x] leaf / gonet / gonet2 / mqant / goworld / kbengine
         - [x] mobile server
         - [x] UE4
         - [ ] UE4 demo
         - [x] Amethyst
         - [x] Kiss3D
-    - [x] path finding
+    - [x] Pathfinding
         - [ ] recast
         - [x] detour
         - [x] mapper
         - [x] orca
         - [ ] rust path finding
-    - [x] game physics
+    - [x] Game Physics
         - [x] physics for game programmers
         - [x] physics for game developers
         - [x] collision3d
         - [x] Game Physics Engine Development
         - [x] Game Physics 2nd
-        - [ ] realtime collision detection
-        - [ ] Box2
+        - [ ] Realtime Collision Detection
+        - [ ] Box2D
         - [ ] Physx
-    - [ ] rendering
+        - [ ] Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4
+    - [ ] Rendering
         - [x] opengl basic tutorial
         - [ ] opengl advanced tutorial
         - [ ] 3d programming with dx12
-- [ ] OS and distributed Systems
-    - [ ] designing distributed systems / k8s
-    - [ ] xv6
-
-# 论文
-
-- [x] Hashed and Hierarchical Timing Wheels
-- [x] Reciprocal n-body Collision Avoidance
-- [x] Quaternions: From Classical Mechanics to Computer Graphics, and Beyond
-- [x] Weighted Random Sampling
-- [x] An Efficient Method for Weighted Sampling Without Replacement
-- [x] Analytical methods for dynamic simulation of non-penetrating rigid bodies
-- [x] Physically Based Modeling: Principles and Practice
-- [x] Iterative Dynamics with Temporal Coherence
-- [ ] Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4
-- [ ] GDC 09~19 Works
+    - [ ] GDC 09~19 Works
+- [ ] OS and Distributed Systems
+    - [ ] Designing Distributed Systems / K8S
+    - [ ] Xv6
 
 # 技巧
 

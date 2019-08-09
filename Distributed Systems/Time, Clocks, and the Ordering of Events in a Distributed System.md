@@ -22,17 +22,17 @@ We define a clock $C_i$ for each process $P_i$ to be a function which assigns a 
 
 Clock Condition is satisfied if the following 2 conditions hold.
 
-- C1​. If $a$ and $b$ are events in process $P_i$, and $a$ comes before $b$, then $C_i\left(a\right) < C_i\left(b\right)$.
-- C2. If $a$ is the sending of a message by process $P_i$, and $b$ is the receipt of that message by process $P_j$, then $C_i\left(a\right) < C_j\left(b\right)$.
+- **C1**​. If $a$ and $b$ are events in process $P_i$, and $a$ comes before $b$, then $C_i\left(a\right) < C_i\left(b\right)$.
+- **C2**. If $a$ is the sending of a message by process $P_i$, and $b$ is the receipt of that message by process $P_j$, then $C_i\left(a\right) < C_j\left(b\right)$.
 
 To guarantee that the system of clocks satisfies the Clock Condition, we will insure that satisfies conditions C1 and C2. **To meet C1 and C2, implementation rules IR1 and IR2 must be obeyed**.
 
 - **IR1**. Each process $P_i$ increments $C_i$ between any 2 successive events.
 
 - **IR2**.
-- If event $a$ is the sending of a message $m$ by process $P_i$, then the message contains a timestamp   $T_m = C_i(a)$.
-  
-- Upon receiveing a message $m$, process $P_j$ sets $C_j$ greater than or equal to its present value greater than $T_m$.
+  - If event $a$ is the sending of a message $m$ by process $P_i$, then the message contains a timestamp   $T_m = C_i(a)$.
+
+  - Upon receiveing a message $m$, process $P_j$ sets $C_j$ greater than or equal to its present value greater than $T_m$.
 
 ## Ordering the Events Totally
 
@@ -70,6 +70,34 @@ This algorithm is distributed. However this algorithm requires the active partic
 
 "**Anomalous Behavior**". Person $A$ issues a request $A$ on a computer $A$, and telephone person $B$ to issue request $B$ on a different computer $B$. It's possible for request $B$ to receive a lower timestamp and be ordered before request $A$ (since **the precedence information is based on mesages *external* to the system**).
 
-**Strong Clock Condition**. For any events $a$, $b$ in $\mathscr{G}$, if $a \xrightarrow{S} b$, then $C(a) \lt C(b)$.
+**Strong Clock Condition**. For any events $a$, $b$ in $\mathscr{G}$, if $a \to' b$, then $C(a) \lt C(b)$.
 
-This is stronger than the ordinary Clock Condition because $\xrightarrow S$ is stronger relation than $\rightarrow$. It's not general satisfied by the logical clock.
+This is stronger than the ordinary Clock Condition because $\to'$ is stronger relation than $\rightarrow$. It's not general satisfied by the logical clock.
+
+## Physical Clocks
+
+Let $C_i(t)$ denotes the reading of the clock $C_i$ at physical time $t$. In order for the clock $C_i$ to be a true physical clock, we will assume that the following conditions are satisified:
+
+- **PC1**. There exists a constant $\mathcal K \ll 1$ such that, for all $i$, $|\frac{d C_i(t)}{dt} - 1| \lt \mathcal K$.
+- **PC2**. There exists a sufficiently small constant $\epsilon$ such that, For all $i$, $j$: $|C_i(t) - C_j(t)| \lt \epsilon$.
+
+We now specialize IR1 and IR2 for our physical clocks as follows:
+
+- **IR1'**. For each $i$, if $P_i$ does not receive a message at physical time $t$, then $C_i$ is differentiable at time $t$ and $\frac{dC_i(t)}{dt} > 0$.
+- **IR2'**.
+  - If $P_i$ sends a message $m$ at physical time $t$, then $m$ contains a timstamp $T_m = C_i(t)$.
+  - Upon receiving a message $m$ at time $t'$, process $P_j$ sets $C_j(t')$ to $\max \left( C_j \left( t' \right), T_m + \mu_m \right)$.
+
+where $\mu_m$ is the assumed minimum delay.
+
+We now show that this **clock synchronizing algorithm** can be used to satisfy PC2 (**PC2 is not always satisfied as it was in logical clock case**). We assume that the system is described by a directed graph in which an arc from process $P_i$ to process $P_j$ represents a comminication line over which messages are sent. The **diameter** of the directed graph is the smallest number $d$ such that there is a path between any $P_i$ and $P_j$ having at most $d$ arcs.
+
+**THEOREM**. Assume a strongly connected graph of processes with **diameter** $d$ which always obeys rules $IR1'$ and $IR2'$. Assume that for any message $m$, $\mu_m \le \mu$ for some constant $\mu$, and that for all $t \ge t_0$:
+
+1. PC1 holds.
+
+2. There are constant $\tau$ and $\xi$ such that every $\tau$ seconds a message which an unpredictable delay less than $\xi$ is sent over every arc. Then PC2 is satisfied with
+   $$
+   \epsilon \approx d(2 \mathcal K \tau + \xi)
+   $$
+    for all $t \gt t_0 + \tau d$, where the approximations assume $\mu + \xi \ll \tau$.
