@@ -101,3 +101,4 @@ We now show that this **clock synchronizing algorithm** can be used to satisfy P
    \epsilon \approx d(2 \mathcal K \tau + \xi)
    $$
     for all $t \gt t_0 + \tau d$, where the approximations assume $\mu + \xi \ll \tau$.
+
