@@ -18,15 +18,14 @@
         - [x] leaf / gonet / gonet2 / mqant / goworld / kbengine
         - [x] mobile server
         - [x] UE4
-        - [ ] UE4 demo
         - [x] Amethyst
         - [x] Kiss3D
     - [x] Pathfinding
-        - [ ] recast
         - [x] detour
         - [x] mapper
         - [x] orca
-        - [ ] rust path finding
+        - [ ] recast
+        - [ ] pathfinding in game with rust
     - [x] Game Physics
         - [x] physics for game programmers
         - [x] physics for game developers
@@ -37,12 +36,9 @@
         - [ ] Box2D
         - [ ] Physx
         - [ ] Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4
-    - [ ] Rendering
-        - [x] opengl basic tutorial
-        - [ ] opengl advanced tutorial
-        - [ ] 3d programming with dx12
     - [ ] GDC 09~19 Works
 - [ ] OS and Distributed Systems
+    - [x] CMU 17-712
     - [ ] Designing Distributed Systems / K8S
     - [ ] Xv6
 
