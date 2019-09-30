@@ -41,6 +41,8 @@
     - [x] CMU 17-712
     - [ ] Designing Distributed Systems / K8S
     - [ ] Xv6
+    - [ ] [Linearizability: A correctness condition for concurrent objects](https://scholar.google.com/scholar?cluster=7860241540823320465&hl=en&as_sdt=1,29)
+    - [ ] [Linearizability versus Serializabilit](http://www.bailis.org/blog/linearizability-versus-serializability/)
 
 # 技巧
 
