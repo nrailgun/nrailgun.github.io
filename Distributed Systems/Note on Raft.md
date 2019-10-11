@@ -1,8 +1,124 @@
 # In Search of an Understandable Consensus Algorithm
 
+本文是一致性算法 Raft 的论文 *In Search of an Understandable Consensus Algorithm* 的笔记，仅仅记录了算法本身和简要思想，方法的推理过程请查看论文。
+
 ## Introduction
 
+**Raft** is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos (**strong consistency** and **partition tolerance**), but it's more understandable. It has several novel features: 
+
+1. **strong leader**, 
+2. **leader election**,
+3. and **membership changes**.
+
+## The Raft Consensus Algorithm
+
+简单而言：
+
+- 通过 leader 来代理所有的 log 同步，当 log 被*足够数量*的 follower 接收时，commit 这个 log 并执行。
+- 后续Election 过程就是一个 lamport clock 的变种，请先阅读 lamport clock 的论文理解其思想。
+
+注意足够数量（quorum）并不一定是过半数（majority）。下面是算法的 summary。
+
+### State
+
+Updated on stable storage before responding to RPCs.
+
+| Persistent state on all servers: |                                                              |
+| -------------------------------- | ------------------------------------------------------------ |
+| **currentTerm**                  | latest term server has seen (initialized to $0$ on first boot, increases monotonically). |
+| **votedFor**                     | candidateId that received vote in current term (or null if none) |
+| **log[]**                        | log entries; each entry contains command for state machine, and term when entry was received by leader (first index is $1$) |
+
+| Volatile state on all servers: |                                                              |
+| ------------------------------ | ------------------------------------------------------------ |
+| **commitIndex**                | index of highest log entry known to be committed (initialized to $0$, increases monotonically) |
+| **lastApplied**                | index of highest log entry applied to state machine (initialized to $0$, increases monotonically) |
+
+| Volatile state on leaders: | (Reinitialized after election)                               |
+| -------------------------- | ------------------------------------------------------------ |
+| **nextIndex[]**            | for each server, index of the next log entry to send to that server (initialized to leader last log index + 1) |
+| **matchIndex[]**           | for each server, index of highest log entry known to be replicated on server (initialized to 0, increases monotonically) |
+
+### AppendEntries RPC
+
+Invoked by leader to replicate log entries; also used as heartbeat.
+
+| Arguments:       |                                                              |
+| ---------------- | ------------------------------------------------------------ |
+| **term**         | leader’s term                                                |
+| **leaderId**     | so follower can redirect clients                             |
+| **prevLogIndex** | index of log entry immediately preceding new ones            |
+| **prevLogTerm**  | term of prevLogIndex entry                                   |
+| **entries[]**    | log entries to store (empty for heartbeat; may send more than one for efficiency) |
+| **leaderCommit** | leader’s commitIndex                                         |
+
+| Results:    |                                                              |
+| ----------- | ------------------------------------------------------------ |
+| **term**    | currentTerm, for leader to update itself                     |
+| **success** | true if follower contained entry matching prevLogIndex and prevLogTerm |
+
+ Receiver implementation:
+1. Reply false if term $\lt$ currentTerm
+2. Reply false if log doesn’t contain an entry at prevLogIndex whose term matches prevLogTerm
+3. If an existing entry conflicts with a new one (same index but different terms), delete the existing entry and all that follow it
+4. Append any new entries not already in the log
+5. If leaderCommit > commitIndex, set commitIndex $=$ min(leaderCommit, index of last new entry)
+
+### RequestVote RPC
+
+Invoked by candidates to gather votes.
+
+| Arguments:       |                                     |
+| ---------------- | ----------------------------------- |
+| **term**         | candidate’s term                    |
+| **candidateId**  | candidate requesting vote           |
+| **lastLogIndex** | index of candidate’s last log entry |
+| **lastLogTerm**  | term of candidate’s last log entry  |
+
+| Results:        |                                             |
+| --------------- | ------------------------------------------- |
+| **term**        | currentTerm, for candidate to update itself |
+| **voteGranted** | true means candidate received vote          |
+
+Receiver implementation: 
+
+1. Reply false if term < currentTerm
+2. If votedFor is null or candidateId, and candidate’s log is at least as up-to-date as receiver’s log, grant vote
+
+### Rules for Servers
+
+- All Servers:
+  - If commitIndex $\gt$ lastApplied: increment lastApplied, apply log[lastApplied] to state machine
+  - If RPC request or response contains term T $\gt$ currentTerm: set currentTerm = T, convert to follower
+- Followers:
+  - Respond to RPCs from candidates and leaders
+  - If election timeout elapses without receiving AppendEntries RPC from current leader or granting vote to candidate: convert to candidate
+- Candidates:
+  - On conversion to candidate, start election:
+    - Increment currentTerm
+    - Vote for self
+    - Reset election timer
+    - Send RequestVote RPCs to all other servers
+  - If votes received from majority of servers: become leader
+  - If AppendEntries RPC received from new leader: convert to follower
+  - If election timeout elapses: start new election
+- Leaders:
+  - Upon election: send initial empty AppendEntries RPCs (heartbeat) to each server; repeat during idle periods to prevent election timeouts
+  - If command received from client: append entry to local log, respond after entry applied to state machine
+  - If last log index ≥ nextIndex for a follower: send AppendEntries RPC with log entries starting at nextIndex
+    - If successful: update nextIndex and matchIndex for follower
+    - If AppendEntries fails because of log inconsistency: decrement nextIndex and retry
+  - If there exists an N such that N > commitIndex, a majority of matchIndex[i] ≥ N, and log[N].term == currentTerm: set commitIndex = N.
+
+## Cluster Membership Changes
+
+上文假定集群成员固定，实际上可能发生变化。最简单的方法是一个 2PC 过程，先暂停所有节点的服务并更新集群配置，随后再重启所有节点。Raft 认为这种方法可用性较低。
+
+Raft 将新配置同步到 follower 节点，leader 所有的决议需要同时获得旧和新两个配置的半数节点统一才认为被 commit。一旦新配置被 commit，新 leader 可以保证不丢失新配置，此时添加新 log 去掉旧配置并等待其被提交。
+
 # LogCabin
+
+LogCabin 是 Raft 算法论文提供的最小实现。即使是最小实现，也大约有 4w+ 行代码，可见分布式系统实现之难。
 
 ## 客户端
 
