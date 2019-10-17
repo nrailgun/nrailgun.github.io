@@ -283,18 +283,46 @@ Lamport 这段话比较令人费解，我个人的理解是：Paxos 本身无法
 
 简单而言：
 
-- 通过 leader 来代理所有的 log 同步，当 log 被*足够数量*的 follower 接收时，commit 这个 log 并执行。
-- 后续Election 过程就是一个 lamport clock 的变种，请先阅读 lamport clock 的论文理解其思想。
+- Raft 其实是一个 lamport clock 的变种。Raft 记录 log（操作日志）而不是数据。Raft 将数据（state machine / view）与 log 分离，使用 log 重建 state machine，因为数据本身很难反映先后关系，log 却比较容易。
 
-注意足够数量（quorum）并不一定是过半数（majority）。下面是算法的 summary。
+- Raft 通过 leader 来代理所有的 log 操作与同步，当 log entry 被*足够数量*的 followers 接收时，commit 这个 log entry 并在 state machine 中执行。
+- Leader 的 election 过程中，所有的节点都尝试竞选，但只有得到了 quorum 投票的节点才能成为 leader。注意 quorum 并不一定是 majority。
+
+下面是算法的 summary。
 
 ![1571301175387](Behind Redis.assets/1571301175387.png)
+
+即使完全不理解 raft，如果直接按照这个 summary 实现，其实也能实现出一个简单的 demo，这就是为什么说 raft 比 paxos 容易实现。
+
+要理解 raft，要先理解 raft 的 5 大性质：
+
+1. Election safety：最多选出 1 个 leader。
+2. Leader append-only：Leader 永远不会删除 log entry，只会增加。
+3. Log matching：如果不同节点上 log entry 具有相同相同的 term 和 index $i$，那么 index $\lt i$ 的所有 log entry 都是相同的。
+4. Leader completeness：如果 log entry 被 commit，以后永远都会出现在后续的 leader 的 log 中。
+5. State machine safety：如果在一个 index 执行一个 log entry，不可能有其他 state machine 执行不同的 log entry。
+
+这些良好性质是如何保证的呢？先不考虑成员变更，假定每个节点了解所有的节点。
+
+1. Election safety：由于了解所有的节点，所以 majority 是已知的，所以确认自己获得了 majority 的投票是很简单的。
+2. Leader append-only：Raft 不会这么做，leader 就是 NB，leader 的 log entry 就是比人高贵。就这么简单，这么简单做的目标就是为了简单，如果允许根据 follower 来矫正 leader，事情会很复杂。
+3. Log matching：*AppendEntries* RPC 要求提供一个 *prevLogIndex* 和 *prevLogTerm*，通过 leader 的“强权”保证 follower 必须统一。
+   1. 如果这个位置的 log entry 的 *term* 和 *prevLogTerm* 对不上，说明之前的 log entry 还没同步，拒绝这条 log entry。
+   2. *prevLogIndex* 之后任何与请求不一致的 log entry，全部删除，添加请求的 *entries*。
+4. Leader completeness：
+   1. Raft 的选举投票有个特殊的要求，竞选者必须必选民更加 *up-to-date*，选民才能为之投票。所谓的 up-to-date 是指，最后的 log entry 的 term 更大，或者 term 相同但是 index 更大。
+   2. 假设一个 candidate 不具有一个 committed log entry。因为单选必须赢得 majority 选票，而 commit 是指 log entry 被 majority append，那么一半以上的节点会投反对，因此不可能胜选。所以终究只有那些拥有 commited log entry 的人有可能胜选。
+5. State machine safety：Raft 只执行 committed log entry，只有 leader 的 state machine 才会伺服，而 leader 必然拥有 commited log entry，所以 committed 肯定被执行。
+
+结合以上 5 点，可以证明 raft 在成员已知且不变情况下的强一致性。
 
 ### Cluster Membership Changes
 
 上文假定集群成员固定，实际上可能发生变化。最简单的方法是一个 2PC 过程，先暂停所有节点的服务并更新集群配置，随后再重启所有节点。Raft 认为这种方法可用性较低。
 
-Raft 将新配置同步到 follower 节点，leader 所有的决议需要同时获得旧和新两个配置的半数节点统一才认为被 commit。一旦新配置被 commit，新 leader 可以保证不丢失新配置，此时添加新 log 去掉旧配置并等待其被提交。
+如果只是单纯地将节点加入集群，会发生可怕的脑裂问题。例如：最初有 A（leader），B，和 C 3 个节点，加入 D 和 E 两个节点，假定 A 先认知 D 和 E，B 和 C 发生网络切割，尚未认知 D 和 E，B 和 C 认为 majority = 2 互相投票成为 leader，A 认为 majority = 3，得到了 A、D、E 的支持，也是 leader，出现了裂脑问题。
+
+Raft 中，Leader 将新配置作为 log entry append 到 follower 节点，leader 所有的决议需要同时获得旧和新两个配置的半数节点统一才认为被 commit。一旦新配置被 commit，新 leader 可以保证不丢失新配置，此时添加新 log entry 去掉旧配置并等待其被 commit。
 
 ## Redis Revisited
 
@@ -302,18 +330,28 @@ Raft 将新配置同步到 follower 节点，leader 所有的决议需要同时�
 
 ### Cluster
 
+Redis 的 cluster 和 replication 是两个不同的概念，redis 的 cluster 偏重指 sharding 数据分片，另外一方面 master 与其 slave(s) 在一般意义上形成了一个小集群，但我们此处偏重指 sharding。
+
 集群相关消息处理有两个端口：
 
 1. 集群内部：`main` 启动过程中 `initServer` 调用`clusterInit` 初始化集群，`clusterInit` 会注册 `clusterReadHandler` 用于 `epoll` 读事件用于集群通信。`clusterReadHandler`读取完整包后调用 `clusterProcessPacket`。
 2. 集群外部：客户端发送 `'CLUSTER *'` 指令管理集群，命令和普通命令一样通过 `processCommand`，调用 `clusterCommand` 处理。
 
-节点会间歇性在 `clusterCron` 中通过 `PING / PONG` 消息交换集群布局（layout）。
+节点会间歇性在 `clusterCron` 中通过 `PING / PONG` 消息交换集群布局（layout / config / hash slots）。
 
 当集群节点布局发生变化时，节点不会立刻使用 **direct mailing gossip** 的方式通知所有节点，而是采用 **anti-entropy gossip** 的方式随机通知集群中节点。Anti-entropy 无法完全同步的时间上限，但是数学期望可期，且最终将完全同步（eventually consistent）。
 
-**TODO**:
+Redis 集群使用两个 lamport clock：`currentEpoch` 和 `configEpoch`。粗略来理解，前者相当于 Raft 中的 `currentTerm`（Antirez 提到 redis 的曾经是数据节点自选举，算法是一个弱化版的 raft），是 master 的任期，后者是 cluster layout (config / hash slots) 的配置版本。
 
-3. `currentEpoch` & `configEpoch` 是什么？
+> Every cluster node has the concept of currentTerm as in Raft, that is called currentEpoch in Redis Cluster. Every node tries to have a currentEpoch that is the highest found among other nodes, so this information is always added in ping /pong packets headers. Every time a node sees a currentEpoch of another node that is greater than its epoch, it updates its currentEpoch.
+>
+> ...
+>
+> Basically every ping / pong packet does not just publish the currentEpoch, but also the configEpoch, that is, the epoch at which the master started to serve its set of hash slots.
+
+`currentEpoch` 在每个 replication 中独立工作，在 failover 完成后，实际上 cluster 的节点也变化了，因此 `configEpoch` 也会变化。期望上（也仅仅是期望上），`configEpoch` 在 cluster 上是一致且递增的。
+
+再次强调，redis 不是一个强一致性的系统，偶然可能出现不同的配置具有相同的 `configEpoch`，代码对此进行了比较 dirty 的处理：检测并进行了容忍。用 gossip 实现强一致，按理应该很困难。
 
 ### Replication
 
@@ -329,7 +367,7 @@ Redis 的 replication 可以视为 direct mailing gossip 的一个变种（可�
 `WAIT` 指令（quorum acknowledged writing）并不能保证强一致与不丢失，因为：
 
 1. Redis 的存储本身不是严格意义可靠存储，定时存储之间也有时间空洞。
-2. Redis 自身缺乏类似于 raft 的 *more up to date* 的识别机制，并不能保证 failover 中一定会选中那个 *more up to date* 的节点。
+2. Redis 自身缺乏类似于 raft 的 *more up to date* 的识别机制，并不能保证 failover 中一定会选中那个 *more up to date* 的节点。虽然 failover 时会选 offset 比较大的 slave，不过如果连续尽量两次 crash 的情况下，是不能比较 offset 的（原因见 raft 论文）。
 
 ### Sentinel
 
@@ -345,7 +383,13 @@ Sentinel 要知道 majority 有多大，那么需要先知道集群的 layout。
 
 Redis sentinel 为了效率，并不会实时地询问其他节点的意见，而是间歇性地去检查（部分节点）并存储集群情况，当需要时以之前的结果为准，但不一定准确。这样的好处是集群通信压力会小一些，但是会导致一些误判。考虑到错误发起主从切换或略微推迟主从切换并不会导致太过于严重的后果，所以小概率的误判可以接受。
 
-Sentinel 需要特殊处理 partition 导致的节点自以为是 master 的脑裂问题，因为 sentinel 既不是 paxos 那样一次性的 agreement，也不是像 raft 那样状态明确的强一致，所以无法简单通过一个 term 来推定 master 合法性。Redis 没有明确的理论模型，很难建立清晰的边界和严格的不变式，也很难明确状态是 disaster 还是 error（见 2PC 论文）。
+一旦达成了 `ODOWN` 的条件，不考虑 sentinel member changes 的情况下，sentinel 会使用类似 raft 的算法，向其他 sentinel 请求投票，如果得到 sentinels majority 的支持，那么才开始 failover。
+
+### Opinions
+
+下面是一些个人观点，不具有任何客观性。
+
+个人认为 redis 最大的黑暗角落是 metadata 的一致性问题，redis 由于不是特别在乎一致性，所以可以使用各种 dirty trick “当做无事发生”。
 
 由于 redis 没有使用稳定时钟，所以 redis sentinel 会定期检查时间回流和突进，如果发现异常，标记为 TILT，不再参与工作。Antirez 解释 redis 之所以不使用稳定时钟：
 
@@ -356,6 +400,6 @@ G17 的外服和内服都跑着 NTP 服务，理论上很可能出现类似的�
 
 **TODO**
 
-1. Sentinel 节点是如何认知 layout 的？如果 layout 认知不正确（比如 3 个旧节点不认知 2 个旧节点），是否会导致 sentinel leader 脑裂进而导致 promote 多个 replica，最终导致 redis 脑裂？我认为非强一致的情况下，sentinel add 的过程中会发生选出两个 leader 的情况，但是 redis 集群可以最终检测到并干掉其中一个。
+1. 如果 layout 认知不正确（比如 3 个旧节点不认知 2 个旧节点），是否会导致 sentinel leader 脑裂进而导致 promote 多个 replica，最终导致 redis 脑裂？我认为非强一致的情况下，sentinel add 的过程中会发生选出两个 leader 的情况，但是 redis 集群可以最终检测到并干掉其中一个。
 2. Redis 是如何处理 sharding 的？
 
