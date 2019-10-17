@@ -43,4 +43,5 @@ It’s easy to construct a scenario in which two proposers each keep issuing a s
 
 To **guarantee progress**, a **distinguished proposer** (some sort of leader) must be selected as the only one to try issuing proposals. The famous result of *F. L. P* implies that **a reliable algorithm for electing a proposer must use either randomness or real time**.
 
-Lamport 老爷子文化人说话文绉绉的，翻译成人话就是：Paxos 本身无法保证不会出现僵持的情况（*progress not ensured*），所以需要选一个 leader 来负责 propose value。使用 Paxos 来选择一个 leader 理论上也可能遇到僵持的情况，最简单的方法就是每次提 propose 一个 value 就随机 idle 一段时间。
+Lamport 这段话比较令人费解，我个人的理解是：Paxos 本身无法保证不会出现僵持的情况（*progress not ensured*），所以需要选一个 leader 来负责 propose value。使用 Paxos 来选择一个 leader 理论上也可能遇到僵持的情况，最简单的方法就是每次提 propose 一个 value 就随机 idle 一段时间。
+
