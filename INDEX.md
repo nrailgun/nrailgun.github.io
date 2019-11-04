@@ -38,12 +38,12 @@
         - [ ] Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4
     - [ ] GDC 09~19 Works
 - [ ] OS and Distributed Systems
-    - [ ] 2PC
+    - [x] 2PC
     - [x] Gossip
     - [x] Lamport Clock
     - [x] Paxos
     - [x] Raft
-    - [ ] Designing Distributed Systems / K8S
+    - [ ] Docker / K8S
     - [ ] Xv6
 
 # 技巧
