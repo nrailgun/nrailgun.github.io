@@ -398,8 +398,4 @@ Redis sentinel 为了效率，并不会实时地询问其他节点的意见，�
 
 G17 的外服和内服都跑着 NTP 服务，理论上很可能出现类似的错误。
 
-**TODO**
-
-1. 如果 layout 认知不正确（比如 3 个旧节点不认知 2 个旧节点），是否会导致 sentinel leader 脑裂进而导致 promote 多个 replica，最终导致 redis 脑裂？我认为非强一致的情况下，sentinel add 的过程中会发生选出两个 leader 的情况，但是 redis 集群可以最终检测到并干掉其中一个。
-2. Redis 是如何处理 sharding 的？
-
+如果 layout 认知不正确（比如 3 个旧节点不认知 2 个旧节点），是否会导致 sentinel leader 脑裂进而导致 promote 多个 replica，最终导致 redis 脑裂？我认为非强一致的情况下，sentinel add 的过程中会发生选出两个 leader 的情况，但是 redis 集群可以最终检测到并干掉其中一个。

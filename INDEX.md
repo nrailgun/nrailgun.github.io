@@ -3,7 +3,7 @@
 - [x] Languages
     - [x] Golang
     - [x] C++11
-    - [x] Lua / C API / 大致设计
+    - [x] Lua
     - [x] Rust
 - [x] Tools
     - [x] gRpc
@@ -13,23 +13,21 @@
     - [x] Jenkins
     - [x] nginx
 - [x] Video Game Developing
-    - [x] Game Engine Architecture
     - [x] Frameworks
-        - [x] leaf / gonet / gonet2 / mqant / goworld / kbengine
-        - [x] mobile server
+        - [x] Mobile Server
         - [x] UE4
-        - [x] Amethyst
+        - [x] Unity
         - [x] Kiss3D
     - [x] Pathfinding
         - [x] Detour
-        - [x] 网易自研寻路模块 Mapper
+        - [x] Mapper
         - [x] ORCA
         - [ ] Recast
-        - [ ] pathfinding in game with rust
+        - [ ] Pathfinding in game with rust
     - [x] Game Physics
-        - [x] physics for game programmers
-        - [x] physics for game developers
-        - [x] collision3d
+        - [x] Physics for Game Programmers
+        - [x] Physics for Game Developers
+        - [x] Collision3D
         - [x] Game Physics Engine Development
         - [x] Game Physics 2nd
         - [ ] Realtime Collision Detection
@@ -43,6 +41,7 @@
     - [x] Lamport Clock
     - [x] Paxos
     - [x] Raft
+    - [ ] MIT 6.824
     - [ ] Docker / K8S
     - [ ] Xv6
 

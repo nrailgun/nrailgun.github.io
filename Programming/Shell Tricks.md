@@ -1,5 +1,13 @@
 ﻿# Tricks
 
+## For loop
+
+```bash
+for ((i = 1; i < 100; i++)) do
+	echo $i
+done
+```
+
 ## Cat a range of a file
 
 ```bash
