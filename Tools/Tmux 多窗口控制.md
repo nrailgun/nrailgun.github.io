@@ -66,3 +66,37 @@ bind 7 select-pane -t 7
 bind 8 select-pane -t 8
 bind 9 select-pane -t 9
 ```
+
+UPDATE：一种更聪明的写法。
+
+```bash
+#!/usr/bin/env bash
+# -*- encoding: utf-8 -*-
+
+npane=$(tmux display-message -p  '#{window_panes}')
+
+if [ "$1" = 's' ]; then
+        for ((i = 1; i < $2; i++)) do
+                tmux split
+        done
+        tmux select-layout tiled
+        tmux select-pane -t 0
+
+elif [ "$1" = 'c' ]; then
+        for ((i = 1; i < $npane; i++)) do
+                tmux send-keys -t $i 'C-c'
+        done
+
+elif [ "$1" = 'cls' ]; then
+        for ((i = 1; i < $npane; i++)) do
+                tmux send-keys -t $i 'C-c'
+                tmux send-keys -t $i 'clear' 'C-m'
+        done
+
+elif [ "$1" = 'k' ]; then
+        for ((i = 1; i < $npane; i++)) do
+                tmux kill-pane -t 1
+        done
+fi
+```
+
