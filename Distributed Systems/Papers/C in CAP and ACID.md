@@ -1,14 +1,16 @@
+## ACID
+
 ACID = ([atomicity](https://en.wikipedia.org/wiki/Atomicity_(database_systems)), [consistency](https://en.wikipedia.org/wiki/Consistency_(database_systems)), [isolation](https://en.wikipedia.org/wiki/Isolation_(database_systems)), [durability](https://en.wikipedia.org/wiki/Durability_(database_systems)))。由于历史原因，有些概念的命名可能有时候令人迷惑。
 
-## Atomicity
+### Atomicity
 
 atomic transaction 是一系列不可再细分的操作，要么全部发生，要么完全不发生。
 
-## Consistency
+### Consistency
 
-不同于分布式系统 CAP 定理中的 consistency，database 中的 consistency 是指 transaction 必须以合法的方式修改数据（requirement that any given database transaction must change affected data only in allowed ways），亦即数据完整性。
+不同于分布式系统 CAP 定理中的 consistency，database 中的 consistency 是指 transaction 必须以合法的方式修改数据（requirement that any given database transaction must change affected data only in allowed ways），亦即数据完整性（integrity）。
 
-## Isolation
+### Isolation
 
 isolation 和 atomicity 强调不同的方面，atomicity 要求操作一起执行或者不执行，isolation 要求对于其他 process，transaction 仿佛是一个整体 integrity（比如同时观察到 2 个操作结果，或者 0 个操作结果）。
 
@@ -30,15 +32,18 @@ read phenomenas:
 
 2 PL (2 Phase Locking) 是实现 serializability 的常用方法，分为两个阶段：Expanding（只能加锁）和 Shrinking（只能解锁）。可以很直觉地理解为何如此可以避免 read 到事务未完成的中间状态。
 
-## Linearizability vs Serializability
+## Consistency Model
 
-两者强调不同的方面。Linearizability（可线性化 / 线性一致性）也称为 Atomic Consistency（原子一致性），是一种一致性。
+strict consistency 是一个仅在理论上存在的 model，要求所有的操作都按照 wall-clock 定义的 invokation 顺序瞬间完成。
 
-Serializability（可串行化）是一种隔离性。
+sequential consistency 仅要求观察顺序和写入顺序相同。
+
+linearizability（atomic consistency）可以理解为强化版的 sequential consistency，要求立刻被观察到。通常实践中，linearizability 已经是非常强的一致性保证了。
+
+serializability（serializable consistency）要求结果等价于原子操作顺序执行，但对于执行顺序没有要求（比如可以随意调度同一个进程的操作的先后顺序，有时候会导致问题）。
 
 ## REFs
 
 - [ACID](https://en.wikipedia.org/wiki/ACID)
 - [Isolation](https://en.wikipedia.org/wiki/Isolation_(database_systems))
 - [Strong Consistency Models](https://aphyr.com/posts/313-strong-consistency-models)
-
