@@ -1,4 +1,4 @@
-﻿
+
 ## Materials
 
 - [The Rust Programming Language](https://doc.rust-lang.org/book/foreword.html)
@@ -142,6 +142,18 @@ fn xref_ptr() {
     unsafe {
         (*ptrs[0]).internal = 1;
         println!("{:?}", *ptrs[1])
+    }
+}
+
+// 多次引用同一个容器中不同的对象。
+fn multi_mut_ref(hm: HashMap<i32, Vec<i32>>, i1: i32, i2: i32) {
+    // 由于静态检查无法确认究竟 mut ref 两个 map 中的 value 是否为同一个，所以只能 mut ref 整
+    // 个 map。如果**确认**安全，那么 unsafe 处理之。
+    unsafe {
+        (
+            &mut *(hm.get_mut(&i1).unwrap() as *mut Vec<i32>),
+            &mut *(hm.get_mut(&i2).unwrap() as *mut Vec<i32>)
+        )
     }
 }
 ```
@@ -400,3 +412,20 @@ fn f1(bar: &mut Bar) -> Vec<Baz> {
 ```
 
 你可以认为 rust 有些“神经质”，但是另一方面，rust 也在错误出现之前就已经消灭了错误（虽然一些在正确边缘游走的程序也被无辜消灭了）。
+
+### 没有匹配赋值
+
+你可以：
+
+```
+let (a, b) = (1, 2);
+```
+
+但是不能：
+
+```
+let (a, b) = (1, 2);
+(a, b) = (3, 4);
+```
+
+这个问题社区有很多吐槽，我也深感赞同，不过一直没有这个特性，奇怪。
