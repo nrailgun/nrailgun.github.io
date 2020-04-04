@@ -110,6 +110,14 @@ Receiver implementation:
     - If AppendEntries fails because of log inconsistency: decrement nextIndex and retry
   - If there exists an N such that N > commitIndex, a majority of matchIndex[i] ≥ N, and log[N].term == currentTerm: set commitIndex = N.
 
+注意，Majority acknowledge commit + 最多 log 当选，是不足以保持一致性的，依旧会丢失 commited log entry。假定 ABCDE 5 个节点，
+
+1. A master 刷 3 个 entry 给 B，然后 AB 被网络隔离；
+2. CDE 重新选举，C 当选，commit 一个 entry（3 节点同意）；
+3. C crash，AB 网络恢复，A / B 有 3 个 log entry，当选，导致 C 的 commit 丢失。
+
+所以 raft most up to date 那个 term 的比较是必须的。
+
 ## Cluster Membership Changes
 
 上文假定集群成员固定，实际上可能发生变化。最简单的方法是一个 2PC 过程，先暂停所有节点的服务并更新集群配置，随后再重启所有节点。Raft 认为这种方法可用性较低。

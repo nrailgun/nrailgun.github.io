@@ -9,3 +9,5 @@ go env -w GOPRIVATE=*.corp.example.com
 ```
 
 具体参见 https://goproxy.io/zh/。
+
+注意，`GO111MODULE` 会导致一些旧的 project layout 工作不正常。
