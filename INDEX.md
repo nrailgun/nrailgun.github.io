@@ -18,8 +18,15 @@
     - [x] Lamport Clock
     - [x] Paxos
     - [x] Raft
-    - [ ] MIT 6.824
-    - [ ] Xv6
+    - [x] MIT 6.824
+      - [x] map reduce
+      - [x] raft
+      - [x] kv store
+    - [ ] MIT 6.828
+- [ ] A Little of Everything
+    - [x] SSL / TLS
+    - [ ] VPN
+    - [ ] 股票
 
 # Tricks
 
@@ -33,7 +40,7 @@
   - 避免使用实际上没有任何含义的命名，除非作用域完全局部化且代码很简单。
 
   - 尽量避免使用数字开头命名文件，否则可能与模块命名不一致，或者在反射时发生麻烦。
-  - 如果存在多种不同的整型标识符，很可能错误传递导致悲剧。使不同标识符的类型/变量命名显著不同（例如不要使用 UId / UserId）。即使使用整型，也尽量定义别名，方便编译器 / 解释器（type hint）检查。
+  - 如果存在多种不同的整型标识符，很可能错误传递导致悲剧。使不同标识符的类型/变量命名显著不同（例如不要使用 UId / UserId）。即使使用整型，也尽量定义别名，方便编译器 / 解释器检查。
 - 有些需求直接实现比较棘手，可以换一种思路用人力处理问题。
 - 状态转移所期望的行为可能丢失吗？可能发生意外的行为吗？
 - 不要设计无法校验合法性的句柄。典型的例子是悬垂指针，或者是无法知晓定时器是否已经触发的定时器编号。
@@ -49,22 +56,21 @@
 
 Video Game Developing
 
-- Frameworks
+- [x] Frameworks
   - [x] Mobile Server
-  - [x] UE4
   - [x] Unity
-  - [x] Kiss3D
-- Pathfinding
+
+- [ ] Pathfinding
   - [x] Detour
   - [x] Mapper
   - [x] ORCA
   - [ ] Recast
-- Game Physics
+- [ ] Game Physics
   - [x] Physics for Game Programmers
   - [x] Physics for Game Developers
   - [x] Collision3D
   - [x] Game Physics Engine Development
-  - [x] Game Physics 2nd
+  - [x] Game Physics 2nd Edition
   - [ ] Realtime Collision Detection
   - [ ] Box2D
   - [ ] Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4
