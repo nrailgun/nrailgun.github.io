@@ -4,14 +4,17 @@
     - [x] Golang
     - [x] Lua
     - [x] Rust
-    - [ ] *Modern C++ Tutorial*
+    - [x] *Modern C++ Tutorial*
 - Tools
     - [x] MongoDb
     - [x] Redis
     - [x] Jenkins
     - [x] nginx
+    - [x] *W3C SQL Tutorial*
     - [ ] Docker / K8S
     - [ ] Kafka
+- Algorithm
+    - [ ] Algos like (bloom filter / hyperloglog)
 - OS and Distributed Systems
     - [x] 2PC
     - [x] Gossip
@@ -60,11 +63,10 @@ Video Game Developing
   - [x] Mobile Server
   - [x] Unity
 
-- [ ] Pathfinding
+- [x] Pathfinding
   - [x] Detour
   - [x] Mapper
   - [x] ORCA
-  - [ ] Recast
 - [ ] Game Physics
   - [x] Physics for Game Programmers
   - [x] Physics for Game Developers
