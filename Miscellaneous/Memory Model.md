@@ -1,6 +1,6 @@
 ## Formal Description
 
-C++ reference 对于 memory model 中的各种定义的描述比较冗长，其核心在于引出 *happens-before* 和 *visible* 这两个定义。定义太多可能令人混乱，总结关系图如下。
+Memory model 中的各种定义的描述比较冗长，其核心在于引出 *happens-before* 和 *visible* 这两个定义。定义太多可能令人混乱，总结关系图如下。
 
 ```mermaid
 graph LR
@@ -41,9 +41,9 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 
 ### Modification Order
 
-对一个 atomic variable 所有的修改，其 **modification order** 是全序的。所有的原子操作满足 4 个 requirements：write-write coherence，read-read coherence，read-write coherence，和 write-read coherence。
+对一个 atomic variable 所有的修改，其 **modification order** 是全序的。
 
-***TODO：4 个定义提到了 happens-before，什么是 happens-before呢？***
+所有的原子操作满足 4 个 requirements：write-write coherence，read-read coherence，read-write coherence，和 write-read coherence。这又涉及了 *happens-before* 的概念，此时可以暂时忽略这 4 个 requirements。
 
 ### Release-sequence
 
@@ -65,25 +65,35 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 
 可以粗略理解为，dependency-ordered before 是 carries dependency 的多线程版本，通过 release / consume 这一组操作建立了一个“依赖关系”。
 
-值得注意的是，C++20 将条件 1 中 *B reads a value written by A* 拓展为 *B reads a value written by any part of the release sequence headed by A*。***Why？需要再研究下。***
+值得注意的是，C++20 将条件 1 中 *B reads a value written by A* 拓展为 *B reads a value written by any part of the release sequence headed by A*。***TODO: Why？需要再研究下。***
 
 ### Synchronizes-with
 
-*Inter-thread happens before* 的概念依赖于 *synchronized-with* 的概念，但是 C++ references 对此却没有给出解释。
+根据 [working draft N3337](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf)：
 
+> An atomic operation A that performs a release operation on an atomic object M **synchronizes with** an atomic operation B that performs an acquire operation on M and takes its value from any side effect in the release sequence headed by A.
 
+如果说 release / consume 建立了一个 *dependency-ordered before* 关系，那么 release / acquire 建立了一个 *synchronizes-with* 关系。
 
 ### Inter-thread happens-before
 
 多个线程间，如果以下任一条件为真：
 
-1. A *synchronizes-with* B（）
-2. A is *dependency-ordered before* B （B 跨线程依赖 A）
+1. A *synchronizes-with* B（一组 release / acquire 操作）
+2. A is *dependency-ordered before* B（一组 release / consume 操作）
 3. A *synchronizes-with* X, and X is *sequenced-before* B
-4. A is *sequenced-before* X, and X *inter-thread happens-before* B （传递关系）
-5. A *inter-thread happens-before* X, and X *inter-thread happens-before* B（传递关系）
+4. A is *sequenced-before* X, and X *inter-thread happens-before* B
+5. A *inter-thread happens-before* X, and X *inter-thread happens-before* B（三线程传递关系）
 
 那么 evaluation A **inter-thread happens before** evaluation B。
+
+条件 1 和 2 分别对应 release / acquire 和 release / consume 很容易理解。条件 5 表示 inter-thread happens-before 的传递性，也容易理解。条件 4 是指：A sequenced-before X，X inter-thread happens-before B，那么 A inter-thread happens-before B。
+
+但是条件 3 比较复杂，**并不是**简单把条件 4 反过来变成：
+
+>  *A is inter-thread happens-before X and X sequenced-before B*
+
+而是把条件限制成了 *A synchronizes-with X*。
 
 ### Happens-before
 
@@ -103,6 +113,6 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 
 # References
 
-- [C++ Memory Order](https://en.cppreference.com/w/cpp/atomic/memory_order)
+- [C++ Reference: Memory Order](https://en.cppreference.com/w/cpp/atomic/memory_order)
 - [The Synchronizes-with Relation](https://preshing.com/20130823/the-synchronizes-with-relation/)
 
