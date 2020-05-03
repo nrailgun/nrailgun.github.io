@@ -1,0 +1,108 @@
+## Formal Description
+
+C++ reference 对于 memory model 中的各种定义的描述比较冗长，其核心在于引出 *happens-before* 和 *visible* 这两个定义。定义太多可能令人混乱，总结关系图如下。
+
+```mermaid
+graph LR
+SB[sequenced-before] --> HB[happens-before]
+RCA[release / consume / acquire] --> DOB
+CD[carries dependency] --> DOB[dependency-ordered before]
+RS[release sequence] --> DOB
+MO[modification order] --> DOB
+DOB --> ITHB[inter-thread happens-before]
+SW[synchronizes-with] --> ITHB
+SB --> ITHB
+ITHB --> HB
+```
+
+### Release / Consume / Acquire
+
+Atomic store with `memory_order_release` or stronger is a **release** operation. The `unlock()` operation on a `Mutex` is also a release operation.
+
+Atomic load with `memory_order_consume` or stronger is a **consume** operation. Atomic load with `memory_order_acquire` or stronger is an **acquire** operation. The `lock()` operation on a `Mutex` is also an acquire operation.
+
+### Sequenced-before
+
+同一线程中，如果 evaluation A 在 evaluation B 开始前结束，那么 A **sequenced-before** B。具体参见 [evaluation order 的定义](https://en.cppreference.com/w/cpp/language/eval_order)。
+
+### Carries dependency
+
+同一线程中，如果以下任一条件为真：
+
+- The value of A is used as an operand of B, **except** (即 B 读 A 计算结果)
+  1. if B is a call to `std::kill_dependency`,
+  2. if A is the left operand of the built-in `&&`, `||`, `?:`, or `,` operators.
+- A write to a scalar object M, B read from M (即 B 读 A 写的内容).
+- A carries dependency into evaluation X, and X carries dependency into B (即传递关系).
+
+那么 evaluation A (that is sequenced-before evaluation B) **carries a dependency into** B (B **depends on** A)。
+
+这一定义直观上很容易理解，但却非常重要，定义了何为”依赖关系“。
+
+### Modification Order
+
+对一个 atomic variable 所有的修改，其 **modification order** 是全序的。所有的原子操作满足 4 个 requirements：write-write coherence，read-read coherence，read-write coherence，和 write-read coherence。
+
+***TODO：4 个定义提到了 happens-before，什么是 happens-before呢？***
+
+### Release-sequence
+
+在 atomic object M 上进行 *release operation* A，满足以下性质的 M 的 modification order 的**最长连续子序列**
+
+1. Writes performed by the same thread (同线程的写操作)
+2. Atomic read-modify-write operations by any thread (任意线程的 RMW 操作)
+
+被称为 **release sequence headed by** A。
+
+### Dependency-ordered before
+
+多个线程间，如果以下任一条件为真：
+
+1. A performs a *release operation* on atomic M, 另一线程上, B performs a *consume operation* on M, and B reads a value written by A.
+2. A is dependency-ordered before X and X carries a dependency into B (X 把关系传递到同一线程中的 B).
+
+那么 evaluation A **dependency-ordered before** evaluation B。
+
+可以粗略理解为，dependency-ordered before 是 carries dependency 的多线程版本，通过 release / consume 这一组操作建立了一个“依赖关系”。
+
+值得注意的是，C++20 将条件 1 中 *B reads a value written by A* 拓展为 *B reads a value written by any part of the release sequence headed by A*。***Why？需要再研究下。***
+
+### Synchronizes-with
+
+*Inter-thread happens before* 的概念依赖于 *synchronized-with* 的概念，但是 C++ references 对此却没有给出解释。
+
+
+
+### Inter-thread happens-before
+
+多个线程间，如果以下任一条件为真：
+
+1. A *synchronizes-with* B（）
+2. A is *dependency-ordered before* B （B 跨线程依赖 A）
+3. A *synchronizes-with* X, and X is *sequenced-before* B
+4. A is *sequenced-before* X, and X *inter-thread happens-before* B （传递关系）
+5. A *inter-thread happens-before* X, and X *inter-thread happens-before* B（传递关系）
+
+那么 evaluation A **inter-thread happens before** evaluation B。
+
+### Happens-before
+
+**Happens-before** 有两种情况：
+
+1. 同一线程，A is *sequenced-before* B，
+2. 不同线程，A *inter-thread happens before* B。
+
+### Visible Side-effects
+
+如果以下条件均为真：
+
+1. A *happens-before* B
+2. no other side effect X to M, where A *happens-before* X and X *happens-before* B（中间无阻拦）
+
+那么，**side-effect** A on scalar M (a write) is **visible** with respect to value computation B on M (a read)。
+
+# References
+
+- [C++ Memory Order](https://en.cppreference.com/w/cpp/atomic/memory_order)
+- [The Synchronizes-with Relation](https://preshing.com/20130823/the-synchronizes-with-relation/)
+
