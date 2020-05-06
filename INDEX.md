@@ -9,10 +9,12 @@
     - [x] MongoDb
     - [x] Redis
     - [x] Jenkins
-    - [x] nginx
+    - [x] Nginx
     - [x] *W3C SQL Tutorial*
-    - [ ] Docker / K8S
-    - [ ] Kafka
+    - [x] *Docker Quickstart*
+    - [x] *K8S Tutorial: Learn K8S Basics*
+- [ ] Kafka
+  
 - Algorithm
     - [ ] Algos like (bloom filter / hyperloglog)
 - OS and Distributed Systems
@@ -26,6 +28,8 @@
       - [x] raft
       - [x] kv store
     - [ ] MIT 6.828
+    - [x] *Software Architecture Patterns: Understanding Common Architecture Patterns and When to Use Them*
+    - [ ] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
 - [ ] A Little of Everything
     - [x] SSL / TLS
     - [ ] VPN
@@ -73,7 +77,7 @@ Video Game Developing
   - [x] Collision3D
   - [x] Game Physics Engine Development
   - [x] Game Physics 2nd Edition
-  - [ ] Realtime Collision Detection
-  - [ ] Box2D
-  - [ ] Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4
+  - [x] Box2D Quickstart
+  - [ ] *Realtime Collision Detection*
+  - [ ] *Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4*
 - [ ] GDC 09~19 Works

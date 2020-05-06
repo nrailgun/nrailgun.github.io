@@ -15,15 +15,17 @@ SB --> ITHB
 ITHB --> HB
 ```
 
-### Release / Consume / Acquire
+### Release / Acquire / Consume
 
-Atomic store with `memory_order_release` or stronger is a **release** operation. The `unlock()` operation on a `Mutex` is also a release operation.
+Atomic store with `memory_order_release` or stronger is a **release** operation. The `unlock()` operation on a `Mutex` is also a release operation. Release  store 不允许编译器和 CPU 将本线程（之前）的 load / store 指令重排到本次 load 之后。
 
-Atomic load with `memory_order_consume` or stronger is a **consume** operation. Atomic load with `memory_order_acquire` or stronger is an **acquire** operation. The `lock()` operation on a `Mutex` is also an acquire operation.
+Atomic load with `memory_order_acquire` or stronger is an **acquire** operation. The `lock()` operation on a `Mutex` is also an acquire operation. Acquire load 不允许编译器和 CPU 将本线程（之后）的 load / store 指令重排到本次 load 之前。
+
+Atomic load with `memory_order_consume` or stronger is a **consume** operation. Consume load 不允许编译器和 CPU 将本线程（之后）的**依赖本次 load 的** load / store 指令重排到本次 load 之前。对于何为“依赖”，请参见 subsection *carries dependency*。
 
 ### Sequenced-before
 
-同一线程中，如果 evaluation A 在 evaluation B 开始前结束，那么 A **sequenced-before** B。具体参见 [evaluation order 的定义](https://en.cppreference.com/w/cpp/language/eval_order)。
+同一线程中，如果 evaluation A **sequenced-before** evalution B，那么 evaluation A 在 evaluation B 开始前结束。详细定义比较漫长，具体参见 [evaluation order 的定义](https://en.cppreference.com/w/cpp/language/eval_order)。
 
 ### Carries dependency
 
@@ -65,7 +67,7 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 
 可以粗略理解为，dependency-ordered before 是 carries dependency 的多线程版本，通过 release / consume 这一组操作建立了一个“依赖关系”。
 
-值得注意的是，C++20 将条件 1 中 *B reads a value written by A* 拓展为 *B reads a value written by any part of the release sequence headed by A*。***TODO: Why？需要再研究下。***
+值得注意的是，C++20 将条件 1 中 *B reads a value written by A* 拓展为 *B reads a value written by any part of the release sequence headed by A*。
 
 ### Synchronizes-with
 
@@ -87,13 +89,13 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 
 那么 evaluation A **inter-thread happens before** evaluation B。
 
-条件 1 和 2 分别对应 release / acquire 和 release / consume 很容易理解。条件 5 表示 inter-thread happens-before 的传递性，也容易理解。条件 4 是指：A sequenced-before X，X inter-thread happens-before B，那么 A inter-thread happens-before B。
+条件 1 和 2 分别对应 release / acquire 和 release / consume 很容易理解。条件 5 表示 inter-thread happens-before 的传递性，也容易理解。
 
-但是条件 3 比较复杂，**并不是**简单把条件 4 反过来变成：
+条件 4 是指：A sequenced-before X，X inter-thread happens-before B，那么 A inter-thread happens-before B。但是条件 3 比较复杂，**并不是**简单把条件 4 反过来变成：
 
 >  *A is inter-thread happens-before X and X sequenced-before B*
 
-而是把条件限制成了 *A synchronizes-with X*。
+而是把条件限制成了 *A synchronizes-with X*。**此处存疑，但我个人的理解是**：*因为 consume load 不能保证 B 在运行时不会重排到 X 之前（sequenced-before 应该是一个编译期的保证，我不太相信编译器能如此影响 [CPU 乱序执行](https://en.wikipedia.org/wiki/Memory_ordering)）*。
 
 ### Happens-before
 
@@ -110,6 +112,10 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 2. no other side effect X to M, where A *happens-before* X and X *happens-before* B（中间无阻拦）
 
 那么，**side-effect** A on scalar M (a write) is **visible** with respect to value computation B on M (a read)。
+
+### TODOS
+
+1. release sequence in c++ 20?
 
 # References
 
