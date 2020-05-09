@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "Learning Goals"
+date: 2020-01-01 00:00:00
+categories: Uncategorized
 ---
 
 # Learning Goals
