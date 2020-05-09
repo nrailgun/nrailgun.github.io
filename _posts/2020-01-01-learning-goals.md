@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Learning Goals"
-permalink: /posts/learning-goals
+categories: Uncategorized
+date: 2020-01-01 00:00:00
 ---
 
 # Learning Goals
