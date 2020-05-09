@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Learning Goals"
+permalink: /posts/learning-goals
 ---
 
 # Learning Goals
