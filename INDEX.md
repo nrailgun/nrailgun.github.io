@@ -1,9 +1,10 @@
 # Learning Goals
 
 - Languages
-    - [x] Golang
-    - [x] Lua
-    - [x] Rust
+    - [x] *The Go Progamming Language*
+    - [x] *The Lua Programming Language*
+    - [x] *The Rust Programming Language*
+    - [x] *Effective Rust*
     - [x] *Modern C++ Tutorial*
 - Tools
     - [x] MongoDb
@@ -13,10 +14,13 @@
     - [x] *W3C SQL Tutorial*
     - [x] *Docker Quickstart*
     - [x] *K8S Tutorial: Learn K8S Basics*
-- [ ] Kafka
-  
-- Algorithm
+    - [x] *W3C Awk Tutorial*
+    - [ ] *Action in K8S*
+- [ ] Algorithms
+    - [ ] *数据结构与算法分析：C++ 语言描述*
     - [ ] Algos like (bloom filter / hyperloglog)
+    - [ ] *Introduction To Algorithms*
+      - [ ] CH 1
 - OS and Distributed Systems
     - [x] 2PC
     - [x] Gossip
@@ -29,7 +33,7 @@
       - [x] kv store
     - [ ] MIT 6.828
     - [x] *Software Architecture Patterns: Understanding Common Architecture Patterns and When to Use Them*
-    - [ ] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
+    - [x] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
 - [ ] A Little of Everything
     - [x] SSL / TLS
     - [ ] VPN
@@ -51,6 +55,7 @@
 - 有些需求直接实现比较棘手，可以换一种思路用人力处理问题。
 - 状态转移所期望的行为可能丢失吗？可能发生意外的行为吗？
 - 不要设计无法校验合法性的句柄。典型的例子是悬垂指针，或者是无法知晓定时器是否已经触发的定时器编号。
+- 缓存记得定时逐出内存！
 
 # Thoughts
 

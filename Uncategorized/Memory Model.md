@@ -95,7 +95,7 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 
 >  *A is inter-thread happens-before X and X sequenced-before B*
 
-而是把条件限制成了 *A synchronizes-with X*。**此处存疑，但我个人的理解是**：*因为 consume load 不能保证 B 在运行时不会重排到 X 之前（sequenced-before 应该是一个编译期的保证，我不太相信编译器能如此影响 [CPU 乱序执行](https://en.wikipedia.org/wiki/Memory_ordering)）*。
+而是把条件限制成了 *A synchronizes-with X*。**此处存疑，但我个人的理解是**：*因为 consume load 不能保证 B 在运行时不会重排到 X 之前（sequenced-before 应该是一个编译期的保证，我不太相信编译器能廉价地影响 [CPU 乱序执行](https://en.wikipedia.org/wiki/Memory_ordering)）*。
 
 ### Happens-before
 
