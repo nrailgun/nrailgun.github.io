@@ -2,7 +2,7 @@
 layout: post
 title: "Tips for Docker and K8S"
 categories: DevOps
-date: 2020-05-09 15:37:07 +0800
+date: 2020-05-09 15:37:07
 ---
 
 ## 网络问题

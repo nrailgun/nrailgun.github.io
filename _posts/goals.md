@@ -1,3 +1,48 @@
+---
+title: "Goals"
+layout: post
+---
+
+# Learning Goals
+
+- Languages
+    - [x] *The Go Progamming Language*
+    - [x] *The Lua Programming Language*
+    - [x] *The Rust Programming Language*
+    - [x] *Effective Rust*
+    - [x] *Modern C++ Tutorial*
+- Tools
+    - [x] MongoDb
+    - [x] Redis
+    - [x] Jenkins
+    - [x] Nginx
+    - [x] *W3C SQL Tutorial*
+    - [x] *Docker Quickstart*
+    - [x] *K8S Tutorial: Learn K8S Basics*
+    - [x] *W3C Awk Tutorial*
+    - [ ] *Action in K8S*
+- [ ] Algorithms
+    - [ ] *数据结构与算法分析：C++ 语言描述*
+    - [ ] Algos like (bloom filter / hyperloglog)
+    - [ ] *Introduction To Algorithms*
+      - [ ] CH 1
+- OS and Distributed Systems
+    - [x] 2PC
+    - [x] Gossip
+    - [x] Lamport Clock
+    - [x] Paxos
+    - [x] Raft
+    - [x] MIT 6.824
+      - [x] map reduce
+      - [x] raft
+      - [x] kv store
+    - [ ] MIT 6.828
+    - [x] *Software Architecture Patterns: Understanding Common Architecture Patterns and When to Use Them*
+    - [x] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
+- [ ] A Little of Everything
+    - [x] SSL / TLS
+    - [ ] VPN
+    - [ ] 股票
 
 # Tricks
 
@@ -23,3 +68,24 @@
 - 在行动之前，注意信息收集，切勿想当然。一个行业或者领域可能业务开展很不理想，即使当前在你的地区很不错，在另一个地区也不一定成立。当信息收集不完善，决策就变成了纯赌博（虽然完全收集是不可能的）。
 - 资本市场价格取决于供需关系，而盈利则需要考虑成本。行业某些畸形发展（价格战，技术战）导致成本提高盈利能力降低，进而导致资本撤离。对于人也是同理，你在市场出卖劳务的价格，不取决于能力门槛，而取决于市场需求和投资热情。
 - 物品的价值对于不同的用户是不同的，避免按照自身盲目揣测。例子便是中大毕业典礼门票和网易游戏新春礼包。
+
+# Defered Learning Goals
+
+Video Game Developing
+- [x] Frameworks
+  - [x] Mobile Server
+  - [x] Unity
+- [x] Pathfinding
+  - [x] Detour
+  - [x] Mapper
+  - [x] ORCA
+- [ ] Game Physics
+  - [x] Physics for Game Programmers
+  - [x] Physics for Game Developers
+  - [x] Collision3D
+  - [x] Game Physics Engine Development
+  - [x] Game Physics 2nd Edition
+  - [x] Box2D Quickstart
+  - [ ] *Realtime Collision Detection*
+  - [ ] *Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4*
+- [ ] GDC 09~19 Works
