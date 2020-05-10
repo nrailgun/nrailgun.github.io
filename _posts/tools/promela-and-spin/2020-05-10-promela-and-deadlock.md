@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Promela and deadlock"
+title: "Promela and Deadlock"
 categories: promela-and-spin
 date: 2020-05-10 00:00:00
 ---
@@ -20,7 +20,7 @@ date: 2020-05-10 00:00:00
  - 锁只能被拥有锁的进程释放；
  - 进程持锁等待；
  - 进程互相等待。
- 
+
 满足以上 4 点，你就很可能要死锁了。
 
 # 交叉 interleaving 与 原子操作 atomic

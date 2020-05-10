@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Modeling Distributed Systems with spin chan"
+title: "Modeling Distributed Systems with Spin Chan"
 categories: promela-and-spin
 date: 2020-05-10 00:00:00
 ---

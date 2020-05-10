@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "spin tracing failed cases"
+title: "Tracing Failed Cases with Spin"
 categories: promela-and-spin
 date: 2020-05-10 00:00:00
 ---
