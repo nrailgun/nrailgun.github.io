@@ -1,0 +1,438 @@
+---
+layout: post
+title: "Note about Rust"
+categories: uncategorized
+date: 2020-05-10 00:00:00
+---
+
+
+## Materials
+
+- [The Rust Programming Language](https://doc.rust-lang.org/book/foreword.html)
+- [Rust by Example](https://doc.rust-lang.org/rust-by-example/index.html)
+- [Rust nomicon](https://doc.rust-lang.org/nomicon/README.html)
+
+## Features
+
+Rust 是一门 0 代价高度抽象的编程语言：
+- 贴近硬件。
+- 图灵完备的宏定义。
+- 模板。
+- 基于 Trait 的多态。
+- 灵活的语法糖。
+- 模式匹配。
+- 原生编译系统。
+- 独特的 ownership / lifetime 概念，强大的编译期检查。
+
+### Ownership 与生命周期
+
+Rust 借鉴了 C++ 的 RAII，value 的释放由 variable 负责。相对于 C++，Ownership 和生命周期的概念赋予了 rust 强大的编译期检查能力。
+
+Ownership 和生命周期的概念比较复杂，具体请参阅 [understanding ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) 和 [validating references with lifetimes](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html)。
+
+我个人认为，生命周期检查，加上循环不变式（`assert`），可以在开发周期消灭大量 bug。当然要理解生命周期检查与循环不变式并不那么简单。关于静态分析可以参考下这个[链接](https://testerhome.com/topics/15076)，给出了简单的介绍。
+
+### 错误处理
+
+错误处理使用 `std::result:Result` 传递，目前没有异常的实现。有人认为没有异常是缺点，我反正认为是优点。美国航天局的代码也是禁止使用异常的，某些工业实时系统也禁止使用中断。
+
+### 成吨语法糖
+
+也许可以甜死人了，随意举两个我最喜欢的。
+
+数值的字面值定义更加友好，允许 `_` 分割，允许二进制表示（这在底层开发中极为有用）。比如：`0b_0000_0100_0010_0000`，比 hex 表示可读很多。
+
+此外 rust 实现了 `try!` 宏 / `?` 符号可以减少“*航天飞机 style*”向上传递错误的噪声，而对于 research code 也有 `expect` 这种方便偷懒的实现。
+
+```rust
+// 假设的第三方库错误。
+#[derive(Debug)]
+enum StubError {
+    Hardware,
+}
+
+// 假设的第三方库实现。
+fn stub_read() -> Result<String, StubError> {
+    return Err(StubError::Hardware);
+}
+
+#[derive(Debug)]
+enum MyError {
+    Io,
+}
+
+// 一个将第三方库错误转成自定义错误的语法糖。
+fn early_return() -> Result<String, MyError> {
+    let rv = stub_read();
+    let s = rv.map_err(|_| MyError::Io)?;
+    return Ok(s);
+}
+```
+
+### 强迫显式处理空引用
+
+rust 是没有真正的 null reference 的，对于可能没有 value 的情况，使用 `Option<T>` 表示。**强迫**客户代码检查是否有 value 才能取出使用。
+
+```rust
+fn check(x: Option<i32>) {
+    if let Some(i) = x {
+        // do something
+    } else {
+        panic("no value");
+    }
+}
+```
+
+如果你真的 100% 确定控制流保证了 `Option<T>` 必然不为空，那么可以使用 `unwrap()`。在意外发生（意外为 None）的情况下发生 panic，避免 c++ 式默默出错。
+
+
+### 线程模型禁止了意外访问
+
+Data racing 有两种可能的似乎：
+1. 忘记某个值需要保护，没有为之创建锁。
+2. 访问值之前忘记加锁。
+
+Ownership 静态检查使你不可能忘记创建锁。
+
+Rust 强迫持锁访问，lock 必须加锁才能取出对象，不可能访问之前忘记加锁。
+```rust
+let m = Mutex::new(5);
+{
+    let mut num = m.lock().unwrap();
+    *num = 6;
+}
+```
+
+此外，rust 的线程消息传递借鉴了 golang 的 chan 的设计，我十分喜欢这个设计。这个设计比上下文不明的情况下调用回调安全 3.1 倍。
+
+
+### 很少默默做事
+
+某些语言喜欢默默做事，很多时候都是灾难源泉。Rust 很少默默做事，甚至不会将 32 位整型自动转换成 64 位整型。`Deref` 是个例外，暂时只发现这个例外。
+
+
+### unsafe
+
+形式化证明并非万能，因此有时候你需要 unsafe 来帮助你绕过静态检查（我觉得应该是越少越好！）。
+
+Rust unsafe 允许：
+- 解引用指针
+- 调用 unsafe 函数
+- 实现 unsafe trait
+- 修改静态变量
+- 访问 union 成员
+
+```rust
+#[derive(Debug)]
+struct Foo {
+    bar: *mut Bar,
+}
+
+#[derive(Debug)]
+struct Bar {
+    internal: i32,
+    foo: *mut Foo,
+}
+
+fn xref_ptr() {
+    let mut ptrs = vec![];
+
+    let mut foo = Foo { bar: 0x0000 as *mut Bar };
+    let mut bar = Bar { internal: 0, foo: &mut foo as *mut Foo };
+    foo.bar = &mut bar as *mut Bar;
+
+    // multiple mutable borrows 对于 safe rust references 是禁止的，如果你确实觉得必要，unsafe rust pointers 允许你这么做。
+    ptrs.push(foo.bar);
+    ptrs.push(foo.bar);
+
+    // 直接访问内存，意外的改变。
+    unsafe {
+        (*ptrs[0]).internal = 1;
+        println!("{:?}", *ptrs[1])
+    }
+}
+
+// 多次引用同一个容器中不同的对象。
+fn multi_mut_ref(hm: HashMap<i32, Vec<i32>>, i1: i32, i2: i32) {
+    // 由于静态检查无法确认究竟 mut ref 两个 map 中的 value 是否为同一个，所以只能 mut ref 整
+    // 个 map。如果**确认**安全，那么 unsafe 处理之。
+    unsafe {
+        (
+            &mut *(hm.get_mut(&i1).unwrap() as *mut Vec<i32>),
+            &mut *(hm.get_mut(&i2).unwrap() as *mut Vec<i32>)
+        )
+    }
+}
+```
+
+## Possible pitfalls
+
+和 C++ 允许多范式编程不同，Rust 虽然集百家之长，但是对于问题一般只提供一种解决方式。即使这样，Rust 有时还是很难理解。
+
+### 析构器接受可变引用
+
+```rust
+fn drop(&mut self);
+```
+
+如果 drop 接受 `T` 而不是 `&mut T` 会导致函数生命周期结束时再次 `drop` value，死循环。所以如果有需要在 drop 中将 value 从 `T` 移动出来，就会比较怪，要用 `Option::Some(T).take()` 移动 value。
+
+### 闭包 value 所属权
+
+由于重复移动 `haystack`，所以下列代码无法通过编译。
+```rust
+fn take_ownership<T>(s: T)
+{}
+
+fn main() {
+    let haystack = vec![1, 2, 3];
+    let contains = move |needle| {                     
+        take_ownership(haystack);
+        return "";
+    };
+    println!("{}", contains(&1));
+    println!("{}", contains(&4));
+}
+```
+
+而下列代码，虽然 move 了 `haystack`，但是可以编译。其实 `contains` 接受的是 `&self` 所以可以编译，但是对于外部，依旧认为是 move 过，不可再次访问（不可以再次 print `haystack`）。
+```rust
+fn main() {
+    let haystack = vec![1, 2, 3];
+    let contains = move |needle| haystack.contains(needle);
+    println!("{}", contains(&1));
+    println!("{}", contains(&4));
+}
+```
+
+不是很能理解这个设定。此外，capture on the fly without type annotation 也不是很能接受（事实上，你想 with 都没办法，必须 without）。
+
+另外一个比较奇怪的点是 `Box<FnOnce>`，由于闭包 `FnOnce` 在调用时签名为：
+```rust
+// This is a nightly-only experimental API. (fn_traits #29625)
+extern "rust-call" fn call_once(self, args: Args) -> Self::Output
+```
+因此在调用时必须从 `Box` 中 move 出 `FnOnce`，但是 `FnOnce` 只是一个 trait，对于编译器在编译时具体类型和大小均未知，所以无法产生代码。所以只能通过奇怪的 trick 来绕开问题。这个问题在 rust 社区被明确指出应该修复（我个人觉得因为实在太奇怪了），将来 rust 应该会解决。
+```rust
+trait FnBox {
+    fn call_box(self: Box<Self>);
+}
+
+impl<F: FnOnce()> FnBox for F {
+    // 避免将 `FnOnce` 移动出 `Box`。
+    // `f: Box<F>` 属于语言依赖于函数库，对于 os kernel 的开发 会不会造成什么问题？
+    fn call_box(self: Box<F>) {
+        (*self)()
+    }
+}
+
+type MyBox = Box<FnBox>;
+
+{
+    // ...
+    my_box.call_box();
+}
+```
+
+暂时未发现闭包允许指定抓捕哪些值/引用，可能导致意外的情况（C++ 允许指定抓捕，我认为这是很好的）。
+
+### match place expression
+
+match 的 head expression 如果是一个 place expression 那么实际上是隐式地 let 变量。
+
+### Non-lexical lifetime
+
+虽然文档让人产生了一种 lifetime 是 reference 才有的错觉，其实变量和引用都有生命周期。在早期的 rust，scope 和 lifetime 是一样的，在 rust2018 之后，这两者不一样了。曾经，下面的代码无法编译，因为在生命周期中有两个 mutable references，而 non-lexical lifetime 使得引用的生命周期在没有使用之后立刻结束。
+
+```rust
+let mut i = 100;
+let r1 = &mut i;
+let r2 = &mut i;
+```
+
+### impl 的生命周期参数
+
+struct 的生命周期参数在 impl 中必须声明，他们是 struct 定义的一部分。
+>Lifetime names for struct fields always need to be declared after the impl keyword and then used after the struct’s name, because those lifetimes are part of the struct’s type.
+
+```rust
+impl<'a> ImportantExcerpt<'a> {
+    fn level(&self) -> i32 {
+        0
+    }
+}
+```
+
+在 impl 中声明这些 lifetime 是有用的，可以用于约束返回值生命周期，并指示返回值生命周期 > self 生命周期。
+```rust
+struct Fus<'a> {
+    roh: &'a Foo,
+}
+
+// 这里改变 lifetime 变量名也没有关系，感觉工程中可能失误，会制造小麻烦。
+impl<'a> Fus<'a> {
+    fn get_roh(&self) -> &'a Foo {
+        self.roh
+    }
+}
+
+fn fus() {
+    let foo = Foo {};
+
+    let roh = {
+        let fus = Fus { roh: &foo };
+        let roh = fus.get_roh();
+        roh
+    };
+    println!("{:?}", roh);
+}
+```
+
+实现迭代器也必不可少。
+```rust
+struct Foo {}
+
+struct MyVec {
+    vec: Vec<Foo>,
+}
+
+impl MyVec {
+    fn new() -> MyVec {
+        MyVec {
+            vec: vec![
+                Foo {}, Foo {}, Foo {},
+            ],
+        }
+    }
+
+    fn iter(&self) -> MyIter {
+        MyIter {
+            i: 0,
+            my_vec: self,
+        }
+    }
+}
+
+struct MyIter<'a> {
+    my_vec: &'a MyVec,
+    i: usize,
+}
+
+impl<'a> Iterator for MyIter<'a> {
+    // 返回引用生命周期理应 <= self.my_vec，允许大于 self。
+    type Item = &'a Foo;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.i < self.my_vec.vec.len() {
+            let rv = Some(&self.my_vec.vec[self.i]);
+            self.i += 1;
+            rv
+        }
+        else {
+            None
+        }
+    }
+}
+```
+
+### Mutable borrows in loop
+
+```rust
+#[derive(Debug)]
+pub struct Bar {
+}
+
+#[derive(Debug)]
+pub struct Foo {
+    bar: Bar,
+}
+
+#[derive(Debug)]
+pub struct Baz<'a> {
+    bar: &'a Bar,
+}
+
+impl Foo {
+    pub fn new() -> Self {
+        Self {
+            bar: Bar {},
+        }
+    }
+
+    // 如果此处 &self 那么可以通过编译。
+    pub fn get_bar(&mut self) -> &Bar {
+        return &self.bar;
+    }
+}
+
+fn wtf1(foo: &mut Foo) {
+    const N: i32 = 10;
+
+    let mut bazes = Vec::<Baz>::new();
+    for i in 0..N {
+        let bar = foo.get_bar();
+        let baz = Baz {
+            bar
+        };
+        // 单纯从 scope 看，`foo.get_bar()` 只 borrow 了一次。
+        // 但是 &bar 被 foo 拥有，虽然 get_bar 并未改变 &bar。如果忽略这个实现，或者说实现出错，多次 &mut foo 确实可能造成 bazes 意外的改变！
+        bazes.push(baz);
+    }
+}
+
+fn wtf2() {
+    let mut foo = Foo::new();
+    wtf1(&mut foo);
+}
+```
+
+此处 rust 提示有些费解，说是多次 mutable borrow。
+
+我的理解是，由于 `bar` 被存储在 `baz`/`bazes` 中仍然存在，因此在 block 结束后这个 mut ref 的生命周期没有结束，因此被认为是多次 mutable borrow。
+
+这个问题应该是不能通过修改 lifetime parameter 直接解决，需要改写程序控制流。有两种思路：
+1. 不用 reference 索引资源（使用整数或者句柄）。
+2. 分离创建（&mut self）与查找（&self）。
+
+```rust
+fn f1(bar: &mut Bar) -> Vec<Baz> {
+    const N: i32 = 10;
+
+    let mut idxes = vec![];
+    let mut bazes = Vec::<Baz>::new();
+
+    for i in 0..N {
+        let foo_idx = bar.add_foo();
+        idxes.push(foo_idx);
+    }
+
+    for i in 0..N {
+        let foo_ref = bar.get_foo(i as usize);
+        let baz = Baz {
+            foo_ref
+        };
+        bazes.push(baz);
+    }
+
+    return bazes;
+}
+```
+
+你可以认为 rust 有些“神经质”，但是另一方面，rust 也在错误出现之前就已经消灭了错误（虽然一些在正确边缘游走的程序也被无辜消灭了）。
+
+### 没有匹配赋值
+
+你可以：
+
+```
+let (a, b) = (1, 2);
+```
+
+但是不能：
+
+```
+let (a, b) = (1, 2);
+(a, b) = (3, 4);
+```
+
+这个问题社区有很多吐槽，我也深感赞同，不过一直没有这个特性，奇怪。
