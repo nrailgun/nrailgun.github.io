@@ -51,7 +51,7 @@ date: 2020-05-10 00:00:00
 
 Map reduce 是一种典型的函数式编程思想：拆分问题，合并答案。Jeff 把一个问题拆分成多个给多个 mapper 处理，reducer 汇总 mappers 的输出。很不幸并不是所有的问题都能有如同 word count 一样简单的拆分方法。
 
-![mapreduce](Beyond Redis.assets/mapreduce.png)
+![mapreduce](beyond-redis.assets/mapreduce.png)
 
 单机的存储存在一些问题：
 
@@ -60,7 +60,7 @@ Map reduce 是一种典型的函数式编程思想：拆分问题，合并答案
 
 Google 为了解决这个问题，设计了分布式文件系统 GFS 和 Bigtable，用于存储非结构化和结构化数据。其中间组件 Chubby 使用了 Paxos 的某个变种。
 
-![GFS Arch](Beyond Redis.assets/1571299166818.png)
+![GFS Arch](beyond-redis.assets/1571299166818.png)
 
 ## CAP Thorem
 
@@ -297,7 +297,7 @@ Lamport 这段话比较令人费解，我个人的理解是：Paxos 本身无法
 
 下面是算法的 summary。
 
-![1571301175387](Beyond Redis.assets/1571301175387.png)
+![1571301175387](beyond-redis.assets/1571301175387.png)
 
 即使完全不理解 raft，如果直接按照这个 summary 实现，其实也能实现出一个简单的 demo，这就是为什么说 raft 比 paxos 容易实现。
 

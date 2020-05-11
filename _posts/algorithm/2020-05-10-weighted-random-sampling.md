@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "weighted random sampling"
+title: "Weighted Random Sampling"
 categories: algorithm
 date: 2020-05-10 00:00:00
 ---

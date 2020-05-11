@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "leetcode"
+title: "LeetCode Tricks"
 categories: algorithm
 date: 2020-05-10 00:00:00
 ---
