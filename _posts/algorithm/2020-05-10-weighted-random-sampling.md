@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Weighted Random Sampling"
+title: "加权随机采样算法"
 categories: algorithm
 date: 2020-05-10 00:00:00
 ---

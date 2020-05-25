@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Return Value Truncation in C"
+title: "C 语言返回值截断"
 categories: uncategorized
 date: 2020-05-10 00:00:00
 ---

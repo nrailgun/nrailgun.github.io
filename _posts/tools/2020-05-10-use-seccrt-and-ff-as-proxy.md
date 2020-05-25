@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Use SecCrt and FF as Proxy"
+title: "使用 SecCrt 与火狐进行代理"
 categories: tools
 date: 2020-05-10 00:00:00
 ---

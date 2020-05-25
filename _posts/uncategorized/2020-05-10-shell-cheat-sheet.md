@@ -172,3 +172,20 @@ for f in *.jpg; do
 	mv $f $(echo $f | sed /s/OLD/NEW/);
 done
 ```
+
+## String postfix
+
+```bash
+for x in $(ls | grep Chapter); do mv "$x" ${x: -2}; done
+```
+
+## Regex Match
+
+使用 `=~` 进行正则表达式匹配。
+
+```bash
+wujunyu@g17-dev-40-189 ~/workspace/tk [master *]
+± % bash -c '[[ `hostname` =~ -([0-9]+)-([0-9]+)$ ]] && echo "${BASH_REMATCH[1]}" '
+40
+```
+

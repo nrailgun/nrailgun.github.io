@@ -21,7 +21,10 @@ Set-ExecutionPolicy RemoteSigned
 
 要么为本地镜像加上标签（而不是默认的 `latest`），要么设置 `image-pull-policy`。
 
-```
+```bash
 kubectl run kubia --image=kubia --port=8080 --generator=run/v1 --image-pull-policy=Never
 ```
 
+## Hyper-V Docker Desktop HostPath 定位错误
+
+这似乎是 docker desktop 的 bug，无论是 unix 路径格式或者 win 路径格式都不对。
