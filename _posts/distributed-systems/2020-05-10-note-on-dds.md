@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "Note on DDS"
+title: "《Designing Distributed Systems》笔记"
 categories: distributed-systems
 date: 2020-05-10 00:00:00
 ---
 
-# Note on *Designing Distributed Systems*
+# Note about *Designing Distributed Systems*
 
 本文为 *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES* 的笔记。个人认为，本书具有一定的指导意义，总结了一些经验性的分布式系统设计模式，但并不涉及理论知识和实现细节。书中 *hands on* 部分大量使用 K8S / Docker / CoreOS 产品。本书英文版不过 130+ pages，阅读速度极快，作为入门，性时比尚可。
 

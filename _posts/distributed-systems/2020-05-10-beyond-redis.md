@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Beyond Redis"
+title: "Redis 相关知识点总结"
 categories: distributed-systems
 date: 2020-05-10 00:00:00
 ---
@@ -280,7 +280,7 @@ Lamport 这段话比较令人费解，我个人的理解是：Paxos 本身无法
 
 ## Raft
 
-*In Search of an Understandable Consensus Algorithm* 提出了著名的 Raft 算法。**Raft** is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos (**strong consistency** and **partition tolerance**), but it's more understandable. It has several novel features: 
+*In Search of an Understandable Consensus Algorithm* 提出了著名的 Raft 算法。**Raft** is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos (**strong consistency** and **partition tolerance**), but it's more understandable. It has several novel features:
 
 1. **strong leader**, 
 2. **leader election**,

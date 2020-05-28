@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Tips for Docker and K8S"
+title: "Docker 与 K8S 贴士"
 categories: DevOps
 date: 2020-05-09 15:37:07
 ---
@@ -15,8 +15,6 @@ date: 2020-05-09 15:37:07
 Set-ExecutionPolicy RemoteSigned
 ```
 
-即可。
-
 ## 运行本地镜像
 
 要么为本地镜像加上标签（而不是默认的 `latest`），要么设置 `image-pull-policy`。
@@ -25,6 +23,60 @@ Set-ExecutionPolicy RemoteSigned
 kubectl run kubia --image=kubia --port=8080 --generator=run/v1 --image-pull-policy=Never
 ```
 
+## 运行 BusyBox
+
+BusyBox 主要是为了在集群中进行 debug 较为方便。
+
+```bash
+kubectl run -it busybox --image=busybox --restart=Never --rm -- sh
+```
+
 ## Hyper-V Docker Desktop HostPath 定位错误
 
 这似乎是 docker desktop 的 bug，无论是 unix 路径格式或者 win 路径格式都不对。
+
+## Change kube-proxy Mode
+
+```bash
+kubectl -n kube-system edit configmap kube-proxy
+kubectl -n kube-system get pod
+kubectl -n kube-system delete pod kube-proxy-OOOOO
+```
+
+```bash
+kubectl cluster-info # get kube-master
+```
+
+## 网络错误定位
+
+查看路由规则：
+
+```bash
+route # unix
+route print # windows
+
+netsh int ipv4 show interfaces # 查看 ethernet interface index
+```
+
+查看 IP 包跳转：
+
+```bash
+traceroute www.google.com
+```
+
+## 更改 ConfigMap
+
+```bash
+kubectl create configmap game --from-file=etc
+kubectl edit cm game # 不需要重启
+```
+
+# 从物理机访问容器
+
+[在 windows 下并不能访问 linux 容器](https://docs.docker.com/docker-for-windows/networking/)，这是 windows 和 docker desktop 的实现决定的（靠北= =#！）。
+
+> ### I cannot ping my containers
+>
+> Docker Desktop for Windows can’t route traffic to Linux containers.  However, you can ping the Windows containers.
+
+在 Debian 9 下测试过，可以在 host ping 通 container。
