@@ -15,6 +15,10 @@ date: 2020-05-30 15:37:07
 Set-ExecutionPolicy RemoteSigned
 ```
 
+## 文件锁住导致 docker 启动、安装失败
+
+可以可以参考[此处](https://gallery.technet.microsoft.com/How-to-find-out-which-c0d4e60e)看看是什么在搞破坏，但是一般是 Hyper-V 的虚拟机导致的。社区反馈删除 Hyper-V 虚拟机 即可，由于 Windows 10 的 bug，某些版本无法删除掉该虚拟机。我的方法是直接关闭 Hyper-V 特性，然后重启。
+
 ## 运行本地镜像
 
 要么为本地镜像加上标签（而不是默认的 `latest`），要么设置 `image-pull-policy`。
@@ -54,7 +58,6 @@ kubectl cluster-info # get kube-master
 ```bash
 route # unix
 route print # windows
-
 netsh int ipv4 show interfaces # 查看 ethernet interface index
 ```
 
@@ -71,7 +74,7 @@ kubectl create configmap game --from-file=etc
 kubectl edit cm game # 不需要重启
 ```
 
-# 从物理机访问容器
+## 从物理机访问容器
 
 [在 windows 下并不能访问 linux 容器](https://docs.docker.com/docker-for-windows/networking/)，这是 windows 和 docker desktop 的实现决定的（靠北= =#！）。
 
@@ -80,7 +83,3 @@ kubectl edit cm game # 不需要重启
 > Docker Desktop for Windows can’t route traffic to Linux containers.  However, you can ping the Windows containers.
 
 在 Debian 9 下测试过，可以在 host ping 通 container。
-
-### 某些文件锁住导致 docker 启动失败
-
-可以参考[此处](https://gallery.technet.microsoft.com/How-to-find-out-which-c0d4e60e)看看是什么在搞破坏。

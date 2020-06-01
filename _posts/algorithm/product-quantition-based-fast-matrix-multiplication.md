@@ -1,10 +1,3 @@
----
-layout: post
-title: "Product Quantition based Fast Matrix Multiplication"
-categories: algorithm
-date: 2020-05-10 00:00:00
----
-
 
 Conventional Matrix-Vector Multiplication:
 $$
