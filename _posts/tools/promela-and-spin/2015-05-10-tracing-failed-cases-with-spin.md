@@ -2,7 +2,7 @@
 layout: post
 title: "Tracing Failed Cases with Spin"
 categories: promela-and-spin
-date: 2020-05-10 00:00:00
+date: 2015-05-10 00:00:00
 ---
 
 随机测试可能找到失败 case，但是并不能保证状态空间完全搜索，而且不能复现。

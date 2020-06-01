@@ -2,7 +2,7 @@
 layout: post
 title: "Modeling Distributed Systems with Spin Chan"
 categories: promela-and-spin
-date: 2020-05-10 00:00:00
+date: 2015-05-10 00:00:00
 ---
 
 Distributed systems consist of:

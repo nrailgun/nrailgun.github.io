@@ -2,7 +2,7 @@
 layout: post
 title: "Analytical Methods for Dynamic Simulation of Non-penetrating Rigid Bodies"
 categories: physics-simulation
-date: 2020-05-10 00:00:00
+date: 2019-05-10 00:00:00
 ---
 
 ﻿## Differential Equation Basics

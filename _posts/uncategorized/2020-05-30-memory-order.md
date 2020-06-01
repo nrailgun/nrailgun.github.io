@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Memory Model"
+title: "Memory Order"
 categories: uncategorized
-date: 2020-05-10 00:00:00
+date: 2020-05-30 00:00:00
 ---
 
 ## Formal Description
@@ -56,7 +56,7 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 
 ### Release-sequence
 
-在 atomic object M 上进行 *release operation* A，满足以下性质的 M 的 modification order 的**最长连续子序列**
+在 atomic object M 上进行 *release operation* A 之后，满足以下性质的 M 的 modification order 的**最长连续子序列**
 
 1. Writes performed by the same thread (同线程的写操作)
 2. Atomic read-modify-write operations by any thread (任意线程的 RMW 操作)
@@ -119,10 +119,6 @@ Atomic load with `memory_order_consume` or stronger is a **consume** operation. 
 2. no other side effect X to M, where A *happens-before* X and X *happens-before* B（中间无阻拦）
 
 那么，**side-effect** A on scalar M (a write) is **visible** with respect to value computation B on M (a read)。
-
-### TODOS
-
-1. release sequence in c++ 20?
 
 # References
 

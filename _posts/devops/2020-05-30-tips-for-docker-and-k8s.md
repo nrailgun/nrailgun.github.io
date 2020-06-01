@@ -2,7 +2,7 @@
 layout: post
 title: "Docker 与 K8S 贴士"
 categories: DevOps
-date: 2020-05-09 15:37:07
+date: 2020-05-30 15:37:07
 ---
 
 ## 网络问题
@@ -80,3 +80,7 @@ kubectl edit cm game # 不需要重启
 > Docker Desktop for Windows can’t route traffic to Linux containers.  However, you can ping the Windows containers.
 
 在 Debian 9 下测试过，可以在 host ping 通 container。
+
+### 某些文件锁住导致 docker 启动失败
+
+可以参考[此处](https://gallery.technet.microsoft.com/How-to-find-out-which-c0d4e60e)看看是什么在搞破坏。

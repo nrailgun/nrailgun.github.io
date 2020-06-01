@@ -2,7 +2,7 @@
 layout: post
 title: "Iterative Dynamics with Temporal Coherence"
 categories: physics-simulation
-date: 2020-05-10 00:00:00
+date: 2019-05-10 00:00:00
 ---
 
 ﻿## Constrained Dynamics Model
@@ -97,9 +97,9 @@ $$
 ### Handling Penetration
 
  A Baumgarte scheme is used to push the bodies apart when  they overlap. The velocity constraint is augmented with a feedback term proportional to the penetration depth.
- $$
+$$
  J_n V = -\beta C_n
- $$
+$$
 
 Recalling that $\dot{C_n} \approx J_n V$ we have
 $$

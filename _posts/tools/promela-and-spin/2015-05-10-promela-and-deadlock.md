@@ -2,7 +2,7 @@
 layout: post
 title: "Promela and Deadlock"
 categories: promela-and-spin
-date: 2020-05-10 00:00:00
+date: 2015-05-10 00:00:00
 ---
 
 ﻿# 死锁的必要条件
