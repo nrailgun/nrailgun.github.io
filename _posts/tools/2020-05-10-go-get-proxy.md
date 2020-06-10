@@ -20,3 +20,9 @@ go env -w GOPRIVATE=*.corp.example.com
 
 注意，`GO111MODULE` 会导致一些旧的 project layout 工作不正常。
 
+如果 mod cache 导致 gopath 文件夹无法删除：
+
+```bash
+go clean -modcache
+```
+
