@@ -1,12 +1,3 @@
----
-layout: post
-title: "C++ 奇怪角落复习笔记"
-categories: uncategorized
-date: 2020-06-10 00:00:00
----
-
----
-
 负数的 div 和 mod 的符号曾经没有明确定义，C++11 做出了明确要求。
 
 > except for the obscure case where $-m$ overflows, $(-m)/n$ and $m/(-n)$ are always equal to $-(m/n)$, $m\%(-n)$ is equal to
@@ -40,3 +31,36 @@ machine.
 
 ---
 
+Value initialzation：
+
+1. 数组初始化中提供 initializer 数量不足，
+2. 定义 local static obj 没有 initializer，
+3. `T()` 显式 value initialization。
+
+会调用 default ctor。
+
+---
+
+Aggregate class:
+
+1. 全 public，
+2. 没 ctor，
+3. 没 in-class initializer，
+4. 没虚函数，没基类。
+
+可用 initializer list 初始化。
+
+---
+
+constexpr 函数的参数和返回值必须是 literal class。
+
+Aggregate class 如果成员都是 literal 那么 就是 literal class。Non-aggregate class 如果：
+
+1. 数据成员都是 literal，
+2. 有一个 constexpr ctor，
+3. 成员 in-class initializer 必须是 const expression 或者 constexpr。
+4. 必须 default dctor。
+
+---
+
+ 

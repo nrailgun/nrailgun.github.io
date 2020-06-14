@@ -1,10 +1,3 @@
----
-layout: post
-title: "SQL Cheat Sheet"
-categories: uncategorized
-date: 2020-05-10 00:00:00
----
-
 ## CRUD
 
 ### Select

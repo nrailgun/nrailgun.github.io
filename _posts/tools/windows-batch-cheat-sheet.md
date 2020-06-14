@@ -1,10 +1,3 @@
----
-layout: post
-title: "Windows Batch Cheat Sheet"
-categories: uncategorized
-date: 2020-05-30 00:00:00
----
-
 基本语法
 
 ```bat
