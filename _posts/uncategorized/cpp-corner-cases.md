@@ -41,6 +41,22 @@ Value initialzation：
 
 ---
 
+虽然 *C++ Primer* 书中所写 catch exception by value，但是实际上应该 catch exception by ref，否则异常之类会发生 object slicing。
+
+---
+
+C++ 不能 copy array，所以不能将 array 作为返回值，只能返回 array 的指针。写法也怪异 `type (*function(parameters))[dimension]`。说实话 using 比较省事省心。
+
+---
+
+在不同的 scope 里面声明同名函数会导致 shadow 而不是 overload。
+
+---
+
+默认参数在声明中给定，并且不能重新声明，但是可以在 local scope shadow 掉 (= = ?)。
+
+---
+
 Aggregate class:
 
 1. 全 public，
