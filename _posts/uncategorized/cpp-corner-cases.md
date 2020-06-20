@@ -5,7 +5,7 @@
 
 ---
 
-`*p++` 等价于 `*(p++)`，迷惑。
+`*p++` 等价于 `*(p++)`。
 
 ---
 
@@ -79,4 +79,68 @@ Aggregate class 如果成员都是 literal 那么 就是 literal class。Non-agg
 
 ---
 
+众所周知，持有容器类型的 iterator，在容器插入、删除时迭代器会失效。实际上，指针、引用也是同样的。比如 vector resize 的时候，之前持有的指针都成为了野指针，引用都成为了非法引用。
+
+```c++
+class A {
+public:
+    int i;
+    A() : i(0xDEADBEEF) {
+    }
+};
+void foo(int i, A &a) {
+    a.i = i; // invalid ref
+}
+int main(int argc, char* argv[]) {
+    vector<A> as;
+    vector<thread> ts;
+    for (int i = 0; i < 10; i++) {
+        as.push_back(A());
+        ts.emplace_back(thread(foo, i, ref(as[i]));); // 引用已经失效
+    }
+    for (int i = 0; i < 10; i++)
+        ts[i].join();
+    for (int i = 0; i < 10; i++)
+        cout << as[i].i << endl;
+    return EXIT_SUCCESS;
+}
+```
+
+---
+
+New operator `A *a = new A(...)` 会做 2 件事情：
+
+1. 通过 operator new 申请内存，可以重载 `void *::operator new(size_t)` 或者 `void *A::operator(size_t)`。
+2. 通过 placement new `new (a) A(...)` 初始化对象，可以重载 `void *operator new(size_t, void *)` 或者 `void *A::operator new(size_t, void *)`。
+
+---
+
+```c++
+#include <iostream>
+#include <future>
+#include <thread>
  
+int main() {
+    // 通过 async 返回 future 是最抽象的方式。
+    std::future<int> f2 = std::async(std::launch::async, []{ return 8; });
+    
+    // async 其实是开了线程，传了一个 packaged_task。
+    std::packaged_task<int()> task([]{ return 7; });
+    std::future<int> f1 = task.get_future();
+    std::thread t(std::move(task));
+ 
+    // 更细节：packaged_task 其实创建了一个与 future 绑定的 promise，在函数返回时给 promise set_value，然后
+    // future 可以等待结果。
+    std::promise<int> p;
+    std::future<int> f3 = p.get_future();
+    std::thread( [&p]{ p.set_value_at_thread_exit(9); }).detach();
+ 
+    std::cout << "Waiting..." << std::flush;
+    f1.wait();
+    f2.wait();
+    f3.wait();
+    std::cout << f1.get() << ' ' << f2.get() << ' ' << f3.get() << endl;
+    t.join();
+}
+```
+
