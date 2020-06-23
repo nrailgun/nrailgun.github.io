@@ -42,15 +42,6 @@
     - [ ] VPN
     - [ ] 股票
 
-WTF:
-
-- algos
-- paxos / raft
-- paging & memory allocation
-- k8s
-- zqx questions
-- cpp concurrency / network
-
 # Tricks
 
 - 处理全部异常（不可恢复的异常要保证正确料理处理器后事）。
