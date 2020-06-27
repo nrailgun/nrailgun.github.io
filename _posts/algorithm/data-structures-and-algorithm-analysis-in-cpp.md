@@ -90,3 +90,79 @@ public:
 
 ## 图算法
 
+### 拓扑排序
+
+不停输出 in-degree 的 0 的 vertex，并将其连接 vertex in-degree 减 1。
+
+### 无权最短路径
+
+最短路径特例，相当于 $w_i=1$，BFS。
+
+### 有权最短路径
+
+```c++
+class Solution {
+public:
+        using Tii = tuple<int, int>;
+        int networkDelayTime(vector<vector<int>> &edges, int n, int k) {
+                vector<vector<Tii>> adjs(n);
+                for (auto &e : edges) {
+                        int i = e[0] - 1;
+                        int j = e[1] - 1;
+                        int w = e[2];
+                        adjs[i].emplace_back(j, w);
+                }
+                vector<int> dists(n, INT_MAX);
+                dists[--k] = 0;
+
+                priority_queue<Tii, vector<Tii>, greater<Tii>> q;
+                q.push(make_tuple(0, k));
+                vector<bool> visited(n, false);
+                while (!q.empty()) {
+                        int d, i; {
+                                Tii t = q.top();
+                                q.pop();
+                                d = get<0>(t);
+                                i = get<1>(t);
+                        }
+                        visited[i] = true;
+
+                        for (const auto adj : adjs[i]) {
+                                int j = get<0>(adj);
+                                int w = get<1>(adj);
+                                if (visited[j])
+                                        continue; // 这是一步非必须的优化，但是可以减低 adjs 的 `push_heap` 时间。
+                                if (dists[i] + w < dists[j]) {
+                                        dists[j] = dists[i] + w;
+                                        q.emplace(dists[j], j);
+                                }
+                        }
+                }
+                int maxd = *max_element(dists.begin(), dists.end());
+                return maxd == INT_MAX ? -1 : maxd;
+        }
+};
+```
+
+### 负值边图
+
+其实和 dijstra 算法是接近的，但是不允许存在负值环路，否则算法就可以无限循环了。
+
+### 最大流
+
+贪心选取最大流路径，在建立路径后也要多设置一条“反悔”回路。只支持有理数，但是计算机只有有理数。
+
+### 最小生成树
+
+Prim 算法：从源点出发，不停
+
+- 寻找下一个 $w$ 最小的 $(u, v, w)$；其中，$u$ 是 known vertex，$v$ 是 unknown vertex。
+- 标记 $v$ 为 known。
+
+Kruskal 算法：
+
+有 $n$ 个节点，寻找 $n-1$ 条边：
+
+- 优先队列找出最短边 $(u, v, w)$，
+- 看 $u$ 和 $v$ 是否已经连接（并查集），如果未连接，连接并选中该边。
+
