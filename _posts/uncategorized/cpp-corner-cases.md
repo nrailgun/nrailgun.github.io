@@ -144,3 +144,20 @@ int main() {
 }
 ```
 
+---
+
+C++11 的 `chrono` 还是比较方便的，不过接口比较拗口。
+
+```c++
+int main() {
+	chrono::time_point<chrono::steady_clock> t1 = chrono::steady_clock::now();
+	chrono::time_point<chrono::steady_clock> t2 = chrono::steady_clock::now();
+	chrono::milliseconds d = chrono::duration_cast<chrono::milliseconds>(t2 - t1);
+	chrono::steady_clock::rep c = d.count(); // long long
+	cout << c << endl;
+	return EXIT_SUCCESS;
+}
+```
+
+---
+
