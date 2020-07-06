@@ -26,7 +26,7 @@ read phenomenas:
 - dirty reads：读到了 unroll 的值。
 - lost updates：进行到一半，写的值被其他 transaction 覆盖。
 - non-repeatable reads：进行到一半，后部分读到了其他 transaction commit 的值。
-- phantom reads：进行到一半，后部分读到了其他 transaction commit 的 row。
+- phantom reads：进行到一半，后部分（另一个变量）读到了其他 transaction commit 的 row（读到了两个不同 revision 的两个变量）。
 
 | isolation level \ read phenomenas | dirty reads  | lost updates | non-repeatable reads |   phantoms   |
 | :-------------------------------: | :----------: | :----------: | :------------------: | :----------: |
