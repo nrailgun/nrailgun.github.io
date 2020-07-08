@@ -142,17 +142,16 @@ epoll 支持 level & edge 两种触发，level 为默认，有数据就反复触
 
 ```c++
 void setnonblocking(int sock) {
-        int opts;
-        opts=fcntl(sock,F_GETFL);
-        if(opts<0) {
+        int opts = fcntl(sock,F_GETFL);
+        if (opts<0) {
                 perror("fcntl(sock,GETFL)");
                 exit(1);
         }
-        opts = opts|O_NONBLOCK;
-        if(fcntl(sock,F_SETFL,opts)<0) {
+        opts = opts | O_NONBLOCK;
+        if (fcntl(sock,F_SETFL,opts)<0) {
                 perror("fcntl(sock,SETFL,opts)");
                 exit(1);
-        }  
+        }
 }
 
 int main(int argc, char *argv[]) {
@@ -216,3 +215,8 @@ int main(int argc, char *argv[]) {
 ```
 
 ## Socket Options
+
+`so_keepalive` 由 kernel 同一控制所有的 socket，默认两小时，最好不用。
+
+`so_linger` 控制关闭前缓冲区数据如何发送，默认情况下，close 立刻返回，但会尝试发送剩余缓冲区数据。注意 `close` 仅仅是 unix fd ref cnt - 1，不是 4 次挥手。
+

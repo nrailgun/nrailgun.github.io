@@ -60,7 +60,47 @@ int find_substr(string s) {
 
 这种是纯粹做题技巧，一般就是相当于偷一个符号位当做数组出来用，或者是偷一个指针来做映射。实际工程应该没什么参考意义，毕竟随便碰输入数据，出了问题要被 leader 锤到原地去世。
 
-## 等差、等比数列
+## 等差数列
 
-我要吐了，说实话这种高中数学题经常性反应不过来。
+$$
+a_n =a_1 + (n - 1) \times d \\
+S_n = \frac n 2 (a_1 + a_n) = na_1 + \frac{n(n-1)}{2} d
+$$
+
+```c++
+int arith_prog(int a0, int d, int i) {
+	return a0 + i * d;
+}
+int arith_prog_sum(int a0, int d, int i) {
+    return (i + 1) * a0 + (i + 1) * i * d / 2;
+}
+```
+
+$i$ 是如何替换 $n$ 的呢？因为 $i + 1 = n$，替换即可。
+
+## 等比数列
+
+$$
+a_n = a_1 q^{n-1} = a_iq^{n-i} \\
+S_n = \frac{a_1(1-q^n)}{1-q} = \frac{a_1-a_nq}{1-q}
+$$
+
+```c++
+int geo_series(int a0, int q, int i) {
+    return a0 * pow(q, i);
+}
+int geo_series_sum(int a0, int q, int i) {
+    return a0 * (1 - pow(q, i + 1)) / (1 - q);
+}
+```
+
+## 公约数、公倍数
+
+```c++
+int gcd(int a, int b) {
+	if (b == 0)
+		return a;
+	return gcd(b, a % b);
+}
+```
 
