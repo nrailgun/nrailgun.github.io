@@ -37,6 +37,7 @@
     - [x] *Software Architecture Patterns: Understanding Common Architecture Patterns and When to Use Them*
     - [x] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
     - [ ] MIT 6.828
+    - [ ] 复习一下汇编相关知识，拓展一下 x86-64 的知识。
 - A Little of Everything
     - [x] SSL / TLS
     - [ ] VPN

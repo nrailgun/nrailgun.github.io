@@ -218,3 +218,15 @@ int main() {
 }
 ```
 
+---
+
+C style casting 虽然同时具有多种语义，不过熟悉了之后还好。C++ 把 casting 拆成了 4 种。
+
+`static_cast`：
+
+`dynamic_cast`：
+
+`const_cast`：
+
+`reinterpret_cast`：
+
