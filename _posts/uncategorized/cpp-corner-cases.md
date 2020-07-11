@@ -1,7 +1,6 @@
 负数的 div 和 mod 的符号曾经没有明确定义，C++11 做出了明确要求。
 
-> except for the obscure case where $-m$ overflows, $(-m)/n$ and $m/(-n)$ are always equal to $-(m/n)$, $m\%(-n)$ is equal to
-> $m\%n$, and $(-m)\%n$ is equal to $-(m\%n)$.
+> except for the obscure case where $-m$ overflows, $(-m)/n$ and $m/(-n)$ are always equal to $-(m/n)$, $m\%(-n)$ is equal to $m\%n$, and $(-m)\%n$ is equal to $-(m\%n)$.
 
 ---
 
