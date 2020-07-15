@@ -104,3 +104,61 @@ int gcd(int a, int b) {
 }
 ```
 
+## Wildcard
+
+只有 `'.'` 和 `'*'` 两种 wildcard，所以动规 `isMatch(s, i, p, j)` 递归检查即可（根据第一个 char 是否 match 来递归）。
+
+## KMP
+
+kmp 算法要先算 lps (**L**ongest **P**refix which is also **S**uffix)，有了 lps，过程很直观。
+
+```c++
+int kmp(const string &txt, const string &pat) {
+    int n = txt.size(), m = pat.size();
+    vector<int> lps = compute_lps(pat);
+
+    int i = 0, j = 0;
+    while (i < n) {
+        // 如果匹配，i/j 一直向前走；
+        if (txt[i] == pat[j]) {
+            i++;
+            if (++j == m) {
+                return i - m;
+            }
+        }
+        // 如果不匹配，利用和 prefix 匹配得上的 suffix。
+        else {
+            if (j == 0)
+                i++;
+            else
+                j = lps[j - 1];
+        }
+    }
+    return -1;
+}
+
+// Longest Prefix which is also Suffix
+vector<int> compute_lps(const string &pat) {
+    int m = pat.size();
+    vector<int> lps(m, 0);
+
+    int i = 1, len = 0;
+    while (i < m) {
+        // suffix 和 prefix 能 match
+        if (pat[i] == pat[len])
+            lps[i++] = ++len;
+        // suffix 和 prefix 不 match
+        else {
+            // 完全不 match，这里也很容易理解。
+            if (len == 0)
+                lps[i++] = 0;
+            // 要注意，len 是指 prefix 能 match 的长度，可以重复利用下在 len-1 处能 match 的 prefix。
+            // 即使粗略能理解，说实话还是比较抽象。
+            else
+                len = lps[len - 1];
+        }
+    }
+    return lps;
+}
+```
+

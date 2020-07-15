@@ -220,3 +220,16 @@ int main(int argc, char *argv[]) {
 
 `so_linger` 控制关闭前缓冲区数据如何发送，默认情况下，close 立刻返回，但会尝试发送剩余缓冲区数据。注意 `close` 仅仅是 unix fd ref cnt - 1，不是 4 次挥手。
 
+## Semaphore
+
+```c++
+int main(int argc, char *argv[]) {
+        sem_t *sem = sem_open("jesus-wtf-3", O_CREAT | O_EXCL);
+        sem_post(sem);
+        sem_wait(sem);
+        sem_close(sem);
+        sem_unlink("jesus-wtf-3");
+        return EXIT_SUCCESS;
+}
+```
+
