@@ -116,18 +116,15 @@ kmp 算法要先算 lps (**L**ongest **P**refix which is also **S**uffix)，有�
 int kmp(const string &txt, const string &pat) {
     int n = txt.size(), m = pat.size();
     vector<int> lps = compute_lps(pat);
-
     int i = 0, j = 0;
     while (i < n) {
-        // 如果匹配，i/j 一直向前走；
-        if (txt[i] == pat[j]) {
+        if (txt[i] == pat[j]) { // 如果匹配，i/j 一直向前走；
             i++;
             if (++j == m) {
                 return i - m;
             }
         }
-        // 如果不匹配，利用和 prefix 匹配得上的 suffix。
-        else {
+        else { // 如果不匹配，利用和 prefix 匹配得上的 suffix。
             if (j == 0)
                 i++;
             else
@@ -137,28 +134,65 @@ int kmp(const string &txt, const string &pat) {
     return -1;
 }
 
-// Longest Prefix which is also Suffix
-vector<int> compute_lps(const string &pat) {
+vector<int> compute_lps(const string &pat) { // Longest Prefix which is also Suffix
     int m = pat.size();
     vector<int> lps(m, 0);
-
     int i = 1, len = 0;
     while (i < m) {
-        // suffix 和 prefix 能 match
-        if (pat[i] == pat[len])
+        if (pat[i] == pat[len]) // suffix 和 prefix 能 match
             lps[i++] = ++len;
-        // suffix 和 prefix 不 match
-        else {
+        else { // suffix 和 prefix 不 match
             // 完全不 match，这里也很容易理解。
             if (len == 0)
                 lps[i++] = 0;
             // 要注意，len 是指 prefix 能 match 的长度，可以重复利用下在 len-1 处能 match 的 prefix。
-            // 即使粗略能理解，说实话还是比较抽象。
+            // 即使粗略能理解，说实话还是比较抽象。话又说回来，要是随便都能想到，Knuth 还要发论文解释这个算法？想啥呢...
             else
                 len = lps[len - 1];
         }
     }
     return lps;
+}
+```
+
+## 矩阵转置、旋转后的索引
+
+转置
+$$
+M(i, j) = M^T(j, i) \\
+M^T(i, j) = M(j, i)
+$$
+顺时针旋转
+$$
+M(i, j) = M'\left( j, \mathrm{col}(M) - 1 - i \right) \\
+M'(i, j) = M\left( \mathrm{col}(M) - 1 - j, i \right)
+$$
+逆时针旋转
+$$
+M(i, j) = M'\left( \mathrm{row}(M) - 1 - j, i \right) \\
+M'(i, j) = M\left(j, \mathrm{row}(M) - 1 - i \right)
+$$
+顺时针旋转例子
+
+```c++
+void rotate_ij(int n, int i, int j, int &ni, int &nj) {
+    ni = j;
+    nj = n - 1 - i;
+}
+void rotate(vector<vector<int>> &mat) {
+    int n = mat.size();
+    for (int i = 0; i < (n + 1) / 2; i++) {
+        for (int j = 0; j < n / 2; j++) {
+            int v = mat[i][j], _i = i, _j = j;
+            for (int k = 0; k < 4; k++) {
+                int ni, nj;
+                rotate_ij(n, _i, _j, ni, nj);
+                swap(mat[ni][nj], v);
+                _i = ni;
+                _j = nj;
+            }
+        }
+    }
 }
 ```
 
