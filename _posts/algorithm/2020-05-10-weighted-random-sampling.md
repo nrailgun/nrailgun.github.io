@@ -64,4 +64,41 @@ Algorithm A-Res 有两个优点，一是可以使用权重，二是 1 pass onlin
 
 如果 $m$ 较小，$n$ 较大，比起重新构建 $O(n)$ 时间重建二叉树，记录修改过程并还原。
 
-**TODO**：补充算法伪代码。
+```lua
+function wrs(t, n)
+        local nodes = {}
+        for k, w in pairs(t) do
+                local node = {k = k, w = w, tw = w}
+                table.insert(nodes, node)
+        end
+        for i = #nodes, 2, -1 do
+                local parent_idx = math.floor(i / 2)
+                nodes[parent_idx].tw = nodes[parent_idx].tw + nodes[i].tw
+        end
+
+        local ret = {}
+        for i = 1, n do
+                local gas = nodes[1].tw * math.random()
+                local j = 1
+                while gas >= nodes[j].w do
+                        gas = gas - nodes[j].w
+                        j = j * 2
+                        if gas >= nodes[j].tw then
+                                gas = gas - nodes[j].tw
+                                j = j + 1
+                        end
+                end
+                table.insert(ret, nodes[j].k)
+
+                -- adjust weight
+                local w = nodes[j].w
+                nodes[j].w = 0
+                while j > 0 do
+                        nodes[j].tw = nodes[j].tw - w
+                        j = math.floor(j / 2)
+                end
+        end
+        return ret
+end
+```
+

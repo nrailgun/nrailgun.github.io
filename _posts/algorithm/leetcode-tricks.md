@@ -27,38 +27,15 @@
 如果没有特殊算法，一般是抠空间。比如：
 
 1. 从符号位抠。
-2. 从矩阵中抠一行出来用（73. Set Matrix Zeroes）。
+2. 从矩阵中抠一行出来用（73. Set Matrix Zeroes，[138. Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)）
+
+这种是纯粹做题技巧，一般就是相当于偷一个符号位当做数组出来用，或者是偷一个指针来做映射。实际工程应该没什么参考意义，毕竟随便碰输入数据，出了问题要被 leader 锤到原地去世。
 
 ## 数列 / 字符串窗口问题
 
-典型思路是双指针法维护一个滑动的窗口。
+典型思路是双指针法维护一个滑动的窗口。题目：76. Minimum Window Substring。
 
-```c++
-// Substring 类问题的模板：
-int find_substr(string s) {
-	int sbeg = 0, send = 0;
-	int l = INT_MAX, head = 0;
 
-	while (send < s.size()) {
-		send++;
-		// Make constraint invalid
-
-		while (true /* Constraint satisfied */) {
-			// Increase sbeg to make constraint invalid
-			sbeg++;
-		}
-	}
-	return l;
-}
-```
-
-题目：76. Minimum Window Substring。
-
-## 偷用输入数据
-
-题目：[138. Copy List with Random Pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
-
-这种是纯粹做题技巧，一般就是相当于偷一个符号位当做数组出来用，或者是偷一个指针来做映射。实际工程应该没什么参考意义，毕竟随便碰输入数据，出了问题要被 leader 锤到原地去世。
 
 ## 等差数列
 
@@ -120,9 +97,8 @@ int kmp(const string &txt, const string &pat) {
     while (i < n) {
         if (txt[i] == pat[j]) { // 如果匹配，i/j 一直向前走；
             i++;
-            if (++j == m) {
+            if (++j == m)
                 return i - m;
-            }
         }
         else { // 如果不匹配，利用和 prefix 匹配得上的 suffix。
             if (j == 0)
@@ -141,9 +117,8 @@ vector<int> compute_lps(const string &pat) { // Longest Prefix which is also Suf
     while (i < m) {
         if (pat[i] == pat[len]) // suffix 和 prefix 能 match
             lps[i++] = ++len;
-        else { // suffix 和 prefix 不 match
-            // 完全不 match，这里也很容易理解。
-            if (len == 0)
+        else {
+            if (len == 0) // 完全不 match，这里也很容易理解。
                 lps[i++] = 0;
             // 要注意，len 是指 prefix 能 match 的长度，可以重复利用下在 len-1 处能 match 的 prefix。
             // 即使粗略能理解，说实话还是比较抽象。话又说回来，要是随便都能想到，Knuth 还要发论文解释这个算法？想啥呢...
@@ -195,4 +170,18 @@ void rotate(vector<vector<int>> &mat) {
     }
 }
 ```
+
+## 排列组合
+
+$$
+P(n, k) = \frac{n!}{k!} = n(n-1)(n-2)...(n-k+1) \\
+C(n, k) = \frac{P(n, k)}{k!}
+$$
+
+注意利用
+
+- $C(n, 0) = C(n, n) = 1$
+
+- $C(n, k) = C(n, n - k)$
+- $C(n, k+1) = C(n, k) \times \frac{n-k}{k+1}$（可以算 $(a+b)^n = \sum_{k=0}^{n}C(n,k)a^{n-k}b^k$）
 
