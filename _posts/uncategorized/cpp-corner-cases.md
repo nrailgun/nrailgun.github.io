@@ -177,63 +177,77 @@ void foo(T t, Args... args) {
 
 ---
 
-`T &&` 是右值引用，同时也是所谓 *forwarding reference*，可以被 forwarding，保持参数传递过程中的类型。
+C style casting 虽然同时具有多种语义，不过熟悉了之后还好。C++ 把 casting 拆成了 4 种：`static_cast`，`dynamic_cast`，`const_cast`，和 `reinterpret_cast`。
+
+---
+
+注意 move ctor 尽量标记 `noexcept` 方便编译器 stl 中使用 move ctor。话说回来我个人倾向于不用 exception。
+
+不要有以下两种 sb 写法。
 
 ```c++
-struct A {
-    A(int&& n) { std::cout << "rvalue overload, n=" << n << "\n"; }
-    A(int& n)  { std::cout << "lvalue overload, n=" << n << "\n"; }
-};
- 
-class B {
-public:
-    template<class T1, class T2, class T3>
-    B(T1&& t1, T2&& t2, T3&& t3) :
-        a1_{std::forward<T1>(t1)},
-        a2_{std::forward<T2>(t2)},
-        a3_{std::forward<T3>(t3)}
-    {}
-private:
-    A a1_, a2_, a3_;
-};
- 
-template<class T, class U>
-std::unique_ptr<T> make_unique1(U&& u) {
-    return std::unique_ptr<T>(new T(std::forward<U>(u)));
+// 多此一举，编译器一般会把 a 优化成返回值而不是局部变量。
+A foo() {
+    A a;
+    return std::move(a);
 }
- 
-template<class T, class... U>
-std::unique_ptr<T> make_unique2(U&&... u) {
-    return std::unique_ptr<T>(new T(std::forward<U>(u)...));
-}
- 
-int main() {
-    auto p1 = make_unique1<A>(2); // rvalue
-    int i = 1;
-    auto p2 = make_unique1<A>(i); // lvalue
- 
-    std::cout << "B\n";
-    auto t = make_unique2<B>(2, i, 3);
+
+// 这种写法更加 sb，a 作为局部变量在 move ctor 之前直接被 dctor 了。
+A &&bar() {
+    A a;
+    return std::move(a);
 }
 ```
 
----
+由于移动构造的复杂性，move ctor 一般不会自动生成。A move constructor for a class X is implicitly declared as defaulted exactly when
 
-C style casting 虽然同时具有多种语义，不过熟悉了之后还好。C++ 把 casting 拆成了 4 种。
-
-`static_cast`：
-
-`dynamic_cast`：
-
-`const_cast`：
-
-`reinterpret_cast`：
+> - X does not have a user-declared copy constructor,
+> - X does not have a user-declared copy assignment operator,
+> - X does not have a user-declared move assignment operator,
+> - X does not have a user-declared destructor, and
+> - the move constructor would not be implicitly defined as deleted.
 
 ---
+
+Rvalue reference 本身是一个 reference，是一个 lvalue，只是提示编译器把 rvalue match 到自己而已。所以，以下代码实际上 move semantic 会被中途 *block out*。
+
+```c++
+void foo(A &a, int d) { // v1
+	if (d > 0)
+		foo(a, d - 1);
+}
+void foo(A &&a, int d) { // v2
+	if (d > 0)
+		foo(a, d - 1);
+}
+void bar() {
+    foo(A(), 10); // 第 1 次调用 v2，后续 9 次全部调用 v1。
+}
+```
+
+C++98 并不存在引用的引用。对于模板，C++11 有一个引用折叠规则，即：
 
 1. 将一个类型 `A` 的 lval 传递给模板 rref 参数（`T &&`），推断 `T` 为 `A &`，而不是 `A`。
 2. `A& &`，`A & &&`，和 `A&& &` 都折叠成 `A&`。
 3. `A&& &&` 折叠成 `A&&`。
 
----
+这 3 个规则使得 `T &&` 可以对 `arg` 推导出正确的左右性。例如传递 `string` 的 rvalue 给 `T &&` 会推导为 `string &&`，`string` 的 lvalue 给 `T &&` 会推导为 `string & && = string &`。
+
+``` c++
+template <typename T, typename A>
+T *factory(A &&a) {
+    return new T(a);
+}
+```
+
+注意，虽然 `a` 是个 rvalue 引用，但本身是 lvalue。这么写，无论传入参数 是 lvalue or rvalue，T 构造函数永远使用 `remove_reference<A> &` 的构造函数，不能达成我们预期的性能优化。反之，如果你强行写 `std::move(a)`，会导致永远使用 `remove_reference<A> &&`，意外地移动对象，可能导致程序崩溃。所以需要使用 `std::forward`（*perfect forwarding*）。
+
+```c++
+template <typename T, typename A>
+T *factory(A &&a) {
+    return new T(std::forward(a));
+}
+```
+
+C++ std `<algorithm>` 中已经有两个迭代器相关的 `move` 和 `forward` 函数了，这命名太 sb 了。
 

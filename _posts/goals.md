@@ -20,7 +20,6 @@
     - [x] *数据结构与算法分析：C++ 语言描述*
     - [x] *STL 源码剖析*
     - [x] bloom filter
-    - [ ] hyperloglog
     - [x] consistent hashing
     - [ ] *Introduction To Algorithms*
       - [ ] CH 1
@@ -40,7 +39,6 @@
     - [ ] 复习一下汇编相关知识，拓展一下 x86-64 的知识。
 - A Little of Everything
     - [x] SSL / TLS
-    - [ ] VPN
     - [ ] 股票
 
 # Tricks
