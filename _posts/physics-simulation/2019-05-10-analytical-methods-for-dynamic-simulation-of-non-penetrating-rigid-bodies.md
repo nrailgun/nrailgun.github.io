@@ -1,5 +1,6 @@
 ---
 layout: post
+mathjax: true
 title: "Analytical Methods for Dynamic Simulation of Non-penetrating Rigid Bodies"
 categories: physics-simulation
 date: 2019-05-10 00:00:00

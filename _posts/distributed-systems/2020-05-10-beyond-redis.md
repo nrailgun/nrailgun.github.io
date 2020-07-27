@@ -1,5 +1,6 @@
 ---
 layout: post
+mathjax: true
 title: "Redis 相关知识点总结"
 categories: distributed-systems
 date: 2020-05-10 00:00:00

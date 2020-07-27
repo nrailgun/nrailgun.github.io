@@ -1,5 +1,6 @@
 ---
 layout: post
+mathjax: true
 title: "Lamport Clock"
 categories: distributed-systems
 date: 2020-05-10 00:00:00

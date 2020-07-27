@@ -1,5 +1,6 @@
 ---
 layout: post
+mathjax: true
 title: "Bloom Filter"
 categories: algorithm
 date: 2020-06-23 00:00:00

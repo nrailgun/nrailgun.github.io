@@ -1,5 +1,6 @@
 ---
 layout: post
+mathjax: true
 title: "Iterative Dynamics with Temporal Coherence"
 categories: physics-simulation
 date: 2019-05-10 00:00:00

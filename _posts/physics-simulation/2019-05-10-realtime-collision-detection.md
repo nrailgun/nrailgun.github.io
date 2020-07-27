@@ -1,5 +1,6 @@
 ---
 layout: post
+mathjax: true
 title: "Realtime Collision Detection"
 categories: physics-simulation
 date: 2019-05-10 00:00:00
