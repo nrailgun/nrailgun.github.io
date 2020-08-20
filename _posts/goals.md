@@ -36,7 +36,7 @@
     - [x] *Software Architecture Patterns: Understanding Common Architecture Patterns and When to Use Them*
     - [x] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
     - [ ] MIT 6.828
-    - [ ] *PC Assembly Language*
+    - [x] *PC Assembly Language*
 - A Little of Everything
     - [x] SSL / TLS
     - [ ] 股票
