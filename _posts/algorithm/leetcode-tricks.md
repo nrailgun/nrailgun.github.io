@@ -5,10 +5,13 @@
 1. 先找一个 naive solution；
 2. 在 naive solution 的基础上可以套用其他算法，加速查找的速度（比如线段树或者 KMP 加速搜索）；
 3. 最后看看有没有特殊性质可以利用。
+4. 有时候别想太多，解法只有暴力。
+5. 不要想着在写法层面省内存、CPU 之类的，怎么简单怎么写。
 
 其他突破口：
 
-1. 能否排序？
+1. 能否排序？有时候数组排个序问题就简化了。
+2. 如果某个数据很大？问问是不是整体算法要换，也许只是需要剪枝。
 
 ## 两串匹配
 
@@ -184,4 +187,21 @@ $$
 
 - $C(n, k) = C(n, n - k)$
 - $C(n, k+1) = C(n, k) \times \frac{n-k}{k+1}$（可以算 $(a+b)^n = \sum_{k=0}^{n}C(n,k)a^{n-k}b^k$）
+
+## 螺旋矩阵
+
+```c++
+// 上三角：r in [0, n / 2), c in [r, n - 1 - r)
+// 右三角：c in [n / 2, n), r in [n - 1 - c, c)
+// 下三角：r in [n / 2, n), c in (n - 1 - r, r]（c 需要反向迭代）
+// 左三角：c in [0, n / 2), r in (c, n - 1 - c]（r 需要反向迭代）
+for (int i = 0; i < n / 2; i++)
+    for (int j = i; i < n - 1 - i; i++) {
+        // 遍历上三角区域
+    }
+```
+
+## 数组中邻近的更高（低）元素
+
+一般是用（两个双向的）单调栈做，例题：[84. Largest Rectangle in Histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)，[42. Trapping Rain Water](https://leetcode-cn.com/problems/trapping-rain-water/)，[85. Maximal Rectangle](https://leetcode-cn.com/problems/maximal-rectangle/)。
 
