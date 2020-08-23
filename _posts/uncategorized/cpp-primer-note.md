@@ -16,8 +16,7 @@ Integral promotion: `bool`, `char`, `signed char`, `unsigned char`, `short`, and
 
 ---
 
-If any operand is an unsigned type, the type to which the operands are converted depends on the relative sizes of the integral types on the
-machine.
+If any operand is an unsigned type, the type to which the operands are converted depends on the relative sizes of the integral types on the machine.
 
 如果整型提升得到了相同类型，那么无需继续转型。如果符号不同：
 
