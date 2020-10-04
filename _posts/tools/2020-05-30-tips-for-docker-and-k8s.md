@@ -37,6 +37,12 @@ kubectl run -it busybox --image=busybox --restart=Never --rm -- sh
 
 busybox 的镜像有时候更迭之后会出 bug，导致 `nslookup` 不可用。坑爹。
 
+## 删除所有容器
+
+```bash
+docker container rm `docker ps -aq`
+```
+
 ## Hyper-V Docker Desktop HostPath 定位错误
 
 这似乎是 docker desktop 的 bug，无论是 unix 路径格式或者 win 路径格式都不对。

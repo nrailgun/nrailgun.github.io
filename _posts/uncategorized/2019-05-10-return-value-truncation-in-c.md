@@ -5,9 +5,8 @@ categories: uncategorized
 date: 2019-05-10 00:00:00
 ---
 
-﻿
+﻿现在有代码一份，请猜测输出？
 
-现在有代码一份，请猜测输出？
 ```C
 // file: main.c
 

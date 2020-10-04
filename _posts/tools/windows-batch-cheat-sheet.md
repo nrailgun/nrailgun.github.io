@@ -28,3 +28,9 @@ call "cmd /c start /b kubectl port-forward beta-1 6013:6013"
 pause
 ```
 
+忽略大小写
+
+```bash
+echo 'set completion-ignore-case On' >> ~/.inputrc
+```
+

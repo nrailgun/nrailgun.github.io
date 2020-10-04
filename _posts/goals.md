@@ -37,6 +37,8 @@
     - [x] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
     - [ ] MIT 6.828
     - [x] *PC Assembly Language*
+    - [ ] *OSDI 2019*
+    - [ ] *SOSP 2018*
 - A Little of Everything
     - [x] SSL / TLS
     - [ ] 股票
@@ -57,6 +59,8 @@
 - 有些需求直接实现比较棘手，可以换一种思路用人力处理问题。
 - 不要设计无法校验合法性的句柄。典型的例子是悬垂指针，或者是无法知晓定时器是否已经触发的定时器编号。
 - 缓存记得定时逐出内存。
+- Google 搜索去学习一个新领域知识时，注意切换排列组合各种关键字，不要让 google 某些关键字搜索结果限制了思维（例如搜索 *tensorflow parameter server* 还可以去掉 *tensorflow* 搜索看）。
+- 看文档尽可能把文档看齐全，有些小问题可能在文档的后部分的到了解释，重要的功能可能有更好的解决方案。
 
 # Thoughts
 
@@ -86,4 +90,3 @@ Video Game Developing
   - [x] Box2D Quickstart
   - [ ] *Realtime Collision Detection*
   - [ ] *Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4*
-- [ ] GDC Works
