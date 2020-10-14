@@ -43,10 +43,6 @@ line buffer mode
 tcpdump -i eth0 -s0 -l port 80 | grep 'Server:'
 ```
 
-# perf
-
-
-
 # strace
 
 ```bash
@@ -57,13 +53,37 @@ strace -i -t ls
 - -t: print timestamp
 - -T show time spent in syscall
 
-# ftrace
+similar tools:
 
+- ftrace
+- ltrace
 
+# perf
 
-# ltrace
+counting with `perf stat`:
+
+```bash
+perf list # list 可观察指标
+perf stat -e ${LIST} ${CMD}
+perf stat -p ${PID} sleep 1 # 观察进程 1 秒
+```
+
+sampling with `perf record`:
+
+```bash
+x
+```
 
 
 
 # valgrind
 
+
+
+# Jepsen
+
+
+
+https://unix.stackexchange.com/questions/128953/how-to-display-top-results-sorted-by-memory-usage-in-real-time
+
+https://www.linuxprogrammingblog.com/io-profiling

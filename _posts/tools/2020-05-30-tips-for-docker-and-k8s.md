@@ -91,3 +91,10 @@ kubectl edit cm game # 不需要重启
 > Docker Desktop for Windows can’t route traffic to Linux containers.  However, you can ping the Windows containers.
 
 在 Debian 9 下测试过，可以在 host ping 通 container。
+
+## 开多一个 bash
+
+```bash
+docker exec -it $ID bash
+```
+

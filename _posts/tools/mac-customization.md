@@ -4,6 +4,7 @@
 4. system preferences / dock 调整 dock 到左侧。
 6. system preferences / accessibility / display / cursor 设置 cursor size，双屏比较容易观察。
 6. system preferences / mission control 禁止 auto rearrange。
+7. system preferences / keyboard 设置 repeat 速率与 delay。
 
 ---
 
