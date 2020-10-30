@@ -74,7 +74,30 @@ sampling with `perf record`:
 x
 ```
 
+# gdb
 
+gdb 可以查看 python 中 c++ 是如何挂掉的。 
+
+```text
+file python
+run main.py
+bt
+```
+
+选中线程
+
+```
+info threads
+thread tid
+```
+
+打印变量
+
+```
+select-frame 0
+info locals
+p varname
+```
 
 # valgrind
 

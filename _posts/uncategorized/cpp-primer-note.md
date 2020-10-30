@@ -250,3 +250,9 @@ T *factory(A &&a) {
 
 C++ std `<algorithm>` 中已经有两个迭代器相关的 `move` 和 `forward` 函数了，这命名太 sb 了。
 
+---
+
+值得注意的是，`const T&` 也是可以被 `std::move` 的。因为 `std::move` 只负责产生 rvalue ref，所以会产生 `const T&&`。通常来说找不到对应的参数版本的函数，因此 copy ctor 会被偷偷 call，无比坑爹。
+
+---
+

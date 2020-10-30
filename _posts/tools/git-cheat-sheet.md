@@ -10,3 +10,27 @@ git diff --name-only HEAD~2 HEAD
 
 ---
 
+暂存本分支 diff：
+
+```bash
+git stash
+```
+
+然后切换回来之后：
+
+```bash
+git stash pop
+```
+
+---
+
+squeeze 掉垃圾 commit
+
+```bash
+git rebase -i HEAD~N
+```
+
+N 是要合并掉的 commit 数量。
+
+---
+

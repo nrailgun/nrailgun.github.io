@@ -19,8 +19,7 @@
 - Algorithms
     - [x] *数据结构与算法分析：C++ 语言描述*
     - [x] *STL 源码剖析*
-    - [x] bloom filter
-    - [x] consistent hashing
+    - [ ] *Introduction to Linear Algebra*
     - [ ] *Introduction To Algorithms*
       - [ ] CH 1
 - OS and Distributed Systems
@@ -37,6 +36,7 @@
     - [x] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
     - [ ] MIT 6.828
     - [x] *PC Assembly Language*
+    - [ ] *程序员的自我修养*
     - [ ] *OSDI 2019*
     - [ ] *SOSP 2018*
 - A Little of Everything
@@ -75,23 +75,3 @@
 - 物品的价值对于不同的用户是不同的，避免按照自身盲目揣测。例子便是中大毕业典礼门票和网易游戏新春礼包。
 - 如果有人质疑你的软实力，不要顺着其思路走，直接否认。
 
-# Defered Learning Goals
-
-Video Game Developing
-- [x] Frameworks
-  - [x] Mobile Server
-  - [x] Unity
-- [x] Pathfinding
-  - [x] Detour
-  - [x] Mapper
-  - [x] ORCA
-  - [ ] Recast
-- [ ] Game Physics
-  - [x] Physics for Game Programmers
-  - [x] Physics for Game Developers
-  - [x] Collision3D
-  - [x] Game Physics Engine Development
-  - [x] Game Physics 2nd Edition
-  - [x] Box2D Quickstart
-  - [ ] *Realtime Collision Detection*
-  - [ ] *Fast Contact Reduction for Dynamics Simulation, Game Programming Gems 4*

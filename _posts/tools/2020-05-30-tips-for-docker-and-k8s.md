@@ -98,3 +98,9 @@ kubectl edit cm game # 不需要重启
 docker exec -it $ID bash
 ```
 
+## 拷贝 container 文件到 host
+
+```bash
+docker cp <containerId>:/file/path/within/container /host/path/target
+```
+
