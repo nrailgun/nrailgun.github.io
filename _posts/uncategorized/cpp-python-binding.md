@@ -29,5 +29,4 @@ print(ret.value)
 
 ## Using C++ Class
 
-WTF.
-
+http://www.swig.org/Doc1.3/Python.html

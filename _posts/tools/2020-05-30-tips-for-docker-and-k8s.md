@@ -95,6 +95,7 @@ kubectl edit cm game # 不需要重启
 ## 开多一个 bash
 
 ```bash
+docker run -it --rm -d bash
 docker exec -it $ID bash
 ```
 

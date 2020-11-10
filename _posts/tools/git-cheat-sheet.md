@@ -34,3 +34,9 @@ N 是要合并掉的 commit 数量。
 
 ---
 
+重命名分支
+
+```bash
+git branch -m <name>
+```
+
