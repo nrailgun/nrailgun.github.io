@@ -256,3 +256,35 @@ C++ std `<algorithm>` 中已经有两个迭代器相关的 `move` 和 `forward` 
 
 ---
 
+variadic template
+
+```c++
+template <typename T>
+void print(T& t) {
+  cout << t << endl;
+}
+
+template <typename T, typename ...Ts>
+void print(T& t, Ts... ts) {
+  cout << t << endl;
+  print(ts...);
+}
+```
+
+---
+
+get type name
+
+```c++
+#include <cxxabi.h>
+
+template <typename T>
+std::string get_type_name(const T& v) {
+  int status;
+  std::string name = abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
+  return name;
+}
+```
+
+---
+

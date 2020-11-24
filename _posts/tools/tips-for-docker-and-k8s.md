@@ -1,10 +1,3 @@
----
-layout: post
-title: "Docker 与 K8S 贴士"
-categories: DevOps
-date: 2020-05-30 15:37:07
----
-
 ## 网络问题
 
 如果网络访问出现问题，请参考[此处](https://github.com/AliyunContainerService/k8s-for-docker-desktop)。

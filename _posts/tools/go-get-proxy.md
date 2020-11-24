@@ -1,10 +1,3 @@
----
-layout: post
-title: "Go Get 使用代理"
-categories: tools
-date: 2020-05-10 00:00:00
----
-
 在苏联无法获取 golang 的 包体，所以需要设置代理。
 
 ```bash
@@ -25,7 +18,5 @@ go env -w GOPRIVATE=*.corp.example.com
 ```bash
 go clean -modcache
 ```
-
----
 
 

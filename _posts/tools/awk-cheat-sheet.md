@@ -1,11 +1,4 @@
----
-layout: post
-title: "AWK Cheat Sheet"
-categories: tools
-date: 2020-05-10 00:00:00
----
-
-## Syntax
+## sSyntax
 
 Awk 脚本包含 3 部分：Begin（`BEGIN {}`），Body（`/pattern/ {}`） 和 End（`END {}`）。
 

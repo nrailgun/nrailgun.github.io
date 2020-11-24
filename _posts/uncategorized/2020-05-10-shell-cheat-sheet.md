@@ -189,3 +189,15 @@ wujunyu@g17-dev-40-189 ~/workspace/tk [master *]
 40
 ```
 
+## 等待多进程
+
+```bash
+for ((i = 1; i < 5; i++)) do
+  patchbuild transfer -f ps.nr/ -d mmkvsvrtestmem$i &
+  pids[${i}]=$!
+done
+for pid in ${pids[*]}; do
+	wait $pid
+done
+```
+

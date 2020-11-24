@@ -1,11 +1,4 @@
----
-layout: post
-title: "Linux Debug Tools"
-categories: tools
-date: 2020-10-03 00:00:00
----
-
-# tcpdump
+# stcpdump
 
 REFs:
 
@@ -74,13 +67,15 @@ sampling with `perf record`:
 x
 ```
 
+`perf top`
+
 # gdb
 
-gdb 可以查看 python 中 c++ 是如何挂掉的。 
+gdb 可以查看 python 中 c++ 是如何挂掉的（UPDATE：or `gdb --args python main.py`）。 
 
 ```text
 file python
-run main.py
+run main.pys
 bt
 ```
 
@@ -105,8 +100,13 @@ p varname
 
 # Jepsen
 
-
-
 https://unix.stackexchange.com/questions/128953/how-to-display-top-results-sorted-by-memory-usage-in-real-time
 
 https://www.linuxprogrammingblog.com/io-profiling
+
+## 看内存
+
+```bash
+cat /proc/$pid/status
+```
+
