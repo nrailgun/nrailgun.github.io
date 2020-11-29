@@ -96,7 +96,9 @@ p varname
 
 # valgrind
 
-
+```bash
+valgrind --tool=memcheck --leak-check=full ${CMD} ${ARGS} >out 2>&1
+```
 
 # Jepsen
 

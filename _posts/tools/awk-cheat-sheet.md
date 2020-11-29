@@ -1,4 +1,4 @@
-## sSyntax
+## Syntax
 
 Awk 脚本包含 3 部分：Begin（`BEGIN {}`），Body（`/pattern/ {}`） 和 End（`END {}`）。
 
