@@ -40,3 +40,15 @@ N 是要合并掉的 commit 数量。
 git branch -m <name>
 ```
 
+---
+
+大文件管理
+
+```bash
+# https://git-lfs.github.com/
+
+git lfs install
+git lfs track "*.psd"
+git add .gitattributes
+```
+

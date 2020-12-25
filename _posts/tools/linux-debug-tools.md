@@ -106,9 +106,15 @@ https://unix.stackexchange.com/questions/128953/how-to-display-top-results-sorte
 
 https://www.linuxprogrammingblog.com/io-profiling
 
-## 看内存
+# 看内存
 
 ```bash
-cat /proc/$pid/status
+cat /proc/$pid/status | grep Vm
+```
+
+# 启动时间
+
+```bash
+ps -eo pid,lstart,cmd
 ```
 

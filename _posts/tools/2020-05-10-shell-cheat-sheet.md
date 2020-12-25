@@ -7,6 +7,21 @@ date: 2020-05-10 00:00:00
 
 ﻿# Tricks
 
+## If else
+
+```bash
+#!/usr/bin/env bash
+# -*- encoding: utf-8 -*-
+
+if [[ $1 == 'start' ]]; then
+  echo 1
+elif [[ $1 == 'pause' ]]; then
+  echo 2
+else
+  echo 3
+fi
+```
+
 ## For loop
 
 ```bash
