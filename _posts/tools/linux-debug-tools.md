@@ -69,6 +69,10 @@ x
 
 `perf top`
 
+# dstat
+
+x
+
 # gdb
 
 gdb 可以查看 python 中 c++ 是如何挂掉的（UPDATE：or `gdb --args python main.py`）。 
@@ -106,15 +110,23 @@ https://unix.stackexchange.com/questions/128953/how-to-display-top-results-sorte
 
 https://www.linuxprogrammingblog.com/io-profiling
 
-# 看内存
+# 各种查看
+
+## Memory Usage
 
 ```bash
 cat /proc/$pid/status | grep Vm
 ```
 
-# 启动时间
+## Boot Time
 
 ```bash
 ps -eo pid,lstart,cmd
+```
+
+## Threads
+
+```bash
+top -H -c -p `pgrep -d',' -f psstorproxy`
 ```
 

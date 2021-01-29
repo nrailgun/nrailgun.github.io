@@ -288,3 +288,57 @@ std::string get_type_name(const T& v) {
 
 ---
 
+specialization
+
+```c++
+# if 0
+template <typename K, typename V>
+class ABase {
+public:
+  string comm() {
+    return "comm";
+  }
+};
+
+template <typename K, typename V>
+class A : public ABase<K, V> {
+public:
+  string encode() {
+    return "<K, V>";
+  }
+};
+
+template <typename V>
+class A<string, V> : public ABase<string, V> {
+public:
+  string encode() {
+    return "<string, V>";
+  }
+};
+
+template <typename K, typename V>
+class B {
+public:
+  A<K, V> a;
+  string foo() {
+    return a.encode();
+  }
+};
+#endif
+
+template<typename K, typename V>
+class A
+{
+public:
+    template<typename _K = K, typename std::enable_if<std::is_arithmetic<_K>::value>::type* = nullptr>
+    string encode() {
+      return "<K, V>";
+    }
+
+    template<typename _K = K, typename std::enable_if<!std::is_arithmetic<_K>::value>::type* = nullptr>
+    string encode() {
+      return "<string, V>";
+    }
+};
+```
+
