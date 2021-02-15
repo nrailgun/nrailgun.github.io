@@ -288,7 +288,7 @@ std::string get_type_name(const T& v) {
 
 ---
 
-specialization
+specialization / `enable_if`
 
 ```c++
 # if 0
