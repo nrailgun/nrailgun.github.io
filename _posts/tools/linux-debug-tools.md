@@ -110,23 +110,67 @@ https://unix.stackexchange.com/questions/128953/how-to-display-top-results-sorte
 
 https://www.linuxprogrammingblog.com/io-profiling
 
-# 各种查看
+# Linux BPF
 
-## Memory Usage
+http://www.brendangregg.com/Slides/LISA2019_Linux_Systems_Performance.pdf
+
+# 查看指标
+
+### Memory Usage
 
 ```bash
 cat /proc/$pid/status | grep Vm
 ```
 
-## Boot Time
+### Boot Time
 
 ```bash
 ps -eo pid,lstart,cmd
 ```
 
-## Threads
+### Threads
 
 ```bash
 top -H -c -p `pgrep -d',' -f psstorproxy`
 ```
+
+# 分析 log
+
+个人还是喜欢 py，方便又强大。
+
+```python
+import re, sys
+from functools import cmp_to_key
+from statistics import mean
+
+with open(sys.argv[1], 'r') as f:
+  lines = f.readlines()
+
+prog = re.compile(
+	'^INFO:tensorflow:loss = (\w+.\w+), step = (\w+)'
+    )
+
+reqinfos = []
+for line in lines:
+  result = prog.match(line)
+  if not result:
+    continue
+
+  print(result.group(1))
+```
+
+如果需要还可以用 matplotlib 画图
+
+```python
+import matplotlib.pyplot as plt
+
+x = [1, 2, 3]
+y = [4, 5, 6]
+plt.plot(x, y, 'bo', label='weps + ppipe')
+plt.show()
+```
+
+
+
+
 

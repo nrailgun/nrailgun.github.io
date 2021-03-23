@@ -43,8 +43,9 @@
     - [ ] MIT 6.828
     - [x] *PC Assembly Language*
     - [ ] *程序员的自我修养*
-    - [ ] *OSDI 2019*
-    - [ ] *SOSP 2018*
+    - [x] *OSDI 2018*
+    - [x] *SOSP 2019*
+    - [ ] *OSDI 2020*
 - A Little of Everything
     - [x] SSL / TLS
     - [ ] 股票
