@@ -110,3 +110,7 @@ We now show that this **clock synchronizing algorithm** can be used to satisfy P
    $$
     for all $t \gt t_0 + \tau d$, where the approximations assume $\mu + \xi \ll \tau$.
 
+---
+
+lamport clock 有一个改良 vector clock，可参考：https://zhuanlan.zhihu.com/p/56886156 。
+

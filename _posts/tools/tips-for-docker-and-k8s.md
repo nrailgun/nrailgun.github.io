@@ -98,3 +98,9 @@ docker exec -it $ID bash
 docker cp <containerId>:/file/path/within/container /host/path/target
 ```
 
+## 删除大量 images
+
+```bash
+docker rmi $(docker images 'nrwu/ttf-weps-1.15-yard' -a -q)
+```
+

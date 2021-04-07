@@ -10,14 +10,9 @@
     - [x] [C++14](https://en.cppreference.com/w/cpp/14)
     - [x] [C++17](https://en.cppreference.com/w/cpp/17)
     - [ ] [C++20](https://en.cppreference.com/w/cpp/20)
-    - [ ] C++ standard library (until C++20)
     - [ ] *C++ Concurrency in Action*
 - Tools
-    - [x] MongoDb
     - [x] Redis
-    - [x] Jenkins
-    - [x] Nginx
-    - [x] *W3C SQL Tutorial*
     - [x] *Docker Quickstart*
     - [x] *K8S Tutorial: Learn K8S Basics*
     - [x] *W3C Awk Tutorial*
@@ -32,20 +27,15 @@
     - [x] 2PC
     - [x] Gossip
     - [x] Lamport Clock
+    - [x] Vector Clock
+    - [x] Version Vector
     - [x] Paxos
     - [x] Raft
     - [x] MIT 6.824
       - [x] map reduce
       - [x] raft
       - [x] kv store
-    - [x] *Software Architecture Patterns: Understanding Common Architecture Patterns and When to Use Them*
-    - [x] *Designing Distributed Systems: PATTERNS AND PARADIGMS FOR SCALABLE, RELIABLE SERVICES*
     - [ ] MIT 6.828
     - [x] *PC Assembly Language*
     - [ ] *程序员的自我修养*
-    - [x] *OSDI 2018*
-    - [x] *SOSP 2019*
-    - [ ] *OSDI 2020*
-- A Little of Everything
-    - [x] SSL / TLS
-    - [ ] 股票
+
