@@ -1,4 +1,4 @@
-# stcpdump
+# tcpdump
 
 REFs:
 
@@ -61,13 +61,7 @@ perf stat -e ${LIST} ${CMD}
 perf stat -p ${PID} sleep 1 # 观察进程 1 秒
 ```
 
-sampling with `perf record`:
-
-```bash
-x
-```
-
-`perf top`
+http://www.brendangregg.com/perf.html
 
 # dstat
 

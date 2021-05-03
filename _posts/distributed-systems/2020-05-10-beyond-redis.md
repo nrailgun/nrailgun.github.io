@@ -1,7 +1,7 @@
 ---
 layout: post
 mathjax: true
-title: "Redis 相关知识点总结"
+title: "分布式系统经典论文"
 categories: distributed-systems
 date: 2020-05-10 00:00:00
 ---
@@ -393,15 +393,3 @@ Redis sentinel 为了效率，并不会实时地询问其他节点的意见，�
 
 一旦达成了 `ODOWN` 的条件，不考虑 sentinel member changes 的情况下，sentinel 会使用类似 raft 的算法，向其他 sentinel 请求投票，如果得到 sentinels majority 的支持，那么才开始 failover。
 
-### Opinions
-
-下面是一些个人观点，不具有任何客观性。
-
-个人认为 redis 最大的黑暗角落是 metadata 的一致性问题，redis 由于不是特别在乎一致性，所以可以使用各种 dirty trick “当做无事发生”。
-
-由于 redis 没有使用稳定时钟，所以 redis sentinel 会定期检查时间回流和突进，如果发现异常，标记为 TILT，不再参与工作。Antirez 解释 redis 之所以不使用稳定时钟：
-
-1. 稳定时钟需要在某些平台不可用；
-2. 语义与 `EXPIRE` 的实现有冲突。
-
-如果 layout 认知不正确（比如 3 个旧节点不认知 2 个旧节点），是否会导致 sentinel leader 脑裂进而导致 promote 多个 replica，最终导致 redis 脑裂？我认为非强一致的情况下，sentinel add 的过程中会发生选出两个 leader 的情况，但是 redis 集群可以最终检测到并干掉其中一个。
