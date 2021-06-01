@@ -154,3 +154,11 @@ echo -e "Apple Juice\nApple Pie\nApple Tart\nApple Cake" | awk
    '/Apple (Juice|Cake)/'
 ```
 
+# Examples
+
+平均值
+
+```
+cat case1 | awk '{s+=$15}END{print "ave:",s/NR}' 
+```
+

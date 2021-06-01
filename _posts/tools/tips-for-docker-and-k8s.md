@@ -104,3 +104,10 @@ docker cp <containerId>:/file/path/within/container /host/path/target
 docker rmi $(docker images 'nrwu/ttf-weps-1.15-yard' -a -q)
 ```
 
+## CPU quota
+
+```bash
+docker run -it --cpus=".5" ubuntu /bin/bash
+docker inspect def8 | grep -i nano
+```
+

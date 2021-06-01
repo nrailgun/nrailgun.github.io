@@ -5,6 +5,24 @@ categories: uncategorized
 date: 2020-05-30 00:00:00
 ---
 
+## 直观解释
+
+relaxed 只保证 atomicity。
+
+acquire 保证 op 之后的 r/w 不会被 reorder 到 op 之前；release 保证 op 之前的 r/w 不会被 reorder 到 op 之后。
+
+seq-cst 保证 op 前后的 r/w 都不会被 reorder 穿过 op。
+
+```c++
+atomic<bool> f1 = false, f2 = false;
+// 按照标准，store 和 load 可以被 reorder。
+f1.store(true, memory_order_release);
+if (!f2.load(memory_order_acquire))
+  // ...
+```
+
+seq-cst 和 act-rel 的区别在于，seq-cst 包含了 act-rel，此外在所有的 seq-cst 的 op 上建立了一个 single total modification order，顺序在所有的线程观察下都一样。
+
 ## Formal Description
 
 Memory model 中的各种定义的描述比较冗长，其核心在于引出 *happens-before* 和 *visible* 这两个定义。定义太多可能令人混乱，总结关系图如下。

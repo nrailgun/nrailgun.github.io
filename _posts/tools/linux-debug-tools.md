@@ -53,6 +53,8 @@ similar tools:
 
 # perf
 
+http://www.brendangregg.com/perf.html
+
 counting with `perf stat`:
 
 ```bash
@@ -61,11 +63,30 @@ perf stat -e ${LIST} ${CMD}
 perf stat -p ${PID} sleep 1 # 观察进程 1 秒
 ```
 
-http://www.brendangregg.com/perf.html
+perf 可以配合 flamegraph：https://github.com/brendangregg/FlameGraph
+
+```bash
+perf record -F 99 -a -g -- sleep 60
+perf script > out.perf
+~/data2/FlameGraph/stackcollapse-perf.pl out.perf > out.folded
+~/data2/FlameGraph/flamegraph.pl out.folded > kernel.svg
+```
 
 # dstat
 
-x
+简单又好用：https://www.geeksforgeeks.org/dstat-command-in-linux-with-examples/
+
+```
+dstat -c -dn --top-cpu --top-mem
+```
+
+## top
+
+```
+top -p `pgrep -d',' -f weint`
+```
+
+`shift-f` 打开 interactive menu，`P` order by cpu，`M` order by memory。
 
 # gdb
 
